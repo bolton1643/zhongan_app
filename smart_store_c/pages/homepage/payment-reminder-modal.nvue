@@ -1,0 +1,61 @@
+<template>
+	<div class="modal-box">
+		<image class="img-style" src="../../static/homepage/icon-to-be-paid.png"></image>
+		<text class="text-style">您有一个待支付任务</text>
+		<button class="btn-style" type="primary" @click="goPay">去支付</button>
+	</div>
+</template>
+
+<script>
+	export default {
+		methods: {
+			goPay: function() {
+				uni.getStorage({
+					key: 'shopInfo',
+					success: (res) => {
+						console.log(res);
+
+						uni.$emit('payment-reminder-modal');
+
+						uni.navigateTo({
+							url: "../homepage/shopDetails?shopInfo=" + res.data
+						});
+					}
+				});
+
+				const subNvue = uni.getSubNVueById('payment-reminder-modal'); //获取
+				subNvue.hide(); //隐藏
+			}
+		}
+	}
+</script>
+
+<style>
+	.modal-box {
+		background-color: #FFFFFF;
+		border-radius: 24upx;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		padding: 80upx;
+	}
+
+	.img-style {
+		width: 160upx;
+		height: 160upx;
+	}
+
+	.text-style {
+		font-size: 36upx;
+		font-family: PingFangSC-Regular, PingFang SC;
+		font-weight: 400;
+		color: rgba(153, 153, 153, 1);
+	}
+
+	.btn-style {
+		width: 400upx;
+		height: 96upx;
+		line-height: 96upx;
+		border-radius: 56upx;
+	}
+</style>
