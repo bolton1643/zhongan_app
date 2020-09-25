@@ -169,6 +169,7 @@ export default {
         {
           image: menu5,
           text: "店铺设置",
+          url: "/pages/homepage/personInChargeManagement/person-in-charge-management",
         },
       ],
       videoList: [
@@ -316,7 +317,7 @@ export default {
         flag: this.defenceStatus ? 0 : 1,
       };
       this.$tui
-        .request("/shop/deploy", "get", obj)
+        .request("/shop/deploy/set", "post", obj)
         .then((res) => {
           if (res.success && res.status === 200) {
             const text = this.defenceStatus ? "撤防成功" : "布防成功";
