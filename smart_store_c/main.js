@@ -20,10 +20,6 @@ Vue.prototype.$tui = tui;
 import utils from './utils/util';
 Vue.prototype.$utils = utils;
 
-import socket from './js_sdk/plus-websocket/index.js';
-// #ifdef APP-PLUS
-Object.assign(uni, socket)
-// #endif
 
 Vue.config.productionTip = false;
 
