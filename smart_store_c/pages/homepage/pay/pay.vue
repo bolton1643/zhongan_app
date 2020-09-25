@@ -66,7 +66,7 @@
 
 <script>
 import uniCountdown from "@/components/uni-countdown/uni-countdown.vue";
-
+import { aliPrepay, wxPrepay } from '@/api'
 export default {
   components: {
     uniCountdown,
@@ -86,6 +86,40 @@ export default {
   },
 
   methods: {
+    aliPay() {
+      aliPrepay({
+        applyId: '',
+        totalAmount: ''
+      }).then(res => {
+
+      })
+      uni.requestPayment({
+        provider: 'alipay',
+        orderInfo: this.prepayDetail.tradeNo,
+        success: res => {
+        console.log(res)
+            // 进入此回调说明支付成功
+        },
+        fail: err => {
+        console.log('fail:' + JSON.stringify(err));
+            const message = err.errMsg || '';
+            if (message.indexOf('[payment支付宝:62001]') !== -1) {
+                uni.showModal({
+                    content: '您已取消支付。如有需要，您可在我的订单里重新付款。30分钟内有效。',
+                    showCancel: false
+                });
+            } else {
+                uni.showModal({
+                    content: '支付失败,原因为: ' + message,
+                    showCancel: false
+                });
+            }
+        },
+        complete: () => {
+            this.submitting = false;
+            }
+        });
+    },
     goPay() {
       uni.showLoading({
         title: "正在查询支付结果，请稍后",

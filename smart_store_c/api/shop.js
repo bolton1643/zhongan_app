@@ -20,3 +20,7 @@ export function getShopDeplotList(data) {
 export function getPackageInfo(data) {
   return tui.request(`/shop/packageInfo`, "GET", data)
 }
+// 套餐变更
+export function changeShopCombo(data) {
+  return tui.request(`/shop/combo/change`, "GET", data)
+}
