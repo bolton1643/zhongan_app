@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App';
+import './utils/dateformat'
 
 import basics from './pages/basics/home.vue';
 Vue.component('basics', basics);
@@ -29,6 +30,6 @@ Vue.config.productionTip = false;
 App.mpType = 'app';
 
 const app = new Vue({
-	...App
+  ...App
 });
 app.$mount();

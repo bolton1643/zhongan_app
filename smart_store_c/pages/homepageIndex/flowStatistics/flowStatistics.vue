@@ -55,7 +55,7 @@
 
 <script>
 import uCharts from "../../../js_sdk/u-charts/u-charts/u-charts.js";
-import { getShopDaily } from "../../../api";
+import { getShopDaily, getShopHourly } from "../../../api";
 export default {
   data() {
     return {
@@ -89,26 +89,46 @@ export default {
       },
       chartLine: null,
       chartDoubleLine: null,
+      begin: "",
+      end: "",
     };
   },
 
   mounted() {
     this.cWidth = uni.upx2px(676);
     this.cHeight = uni.upx2px(326);
+    this.shopId = uni.getStorageSync("shopId");
     this.getLine();
     this.getDoubleLine();
+    // 获取小时数据
+    this.getShopHourly();
+    // 获取日数据
+    this.getShopDaily();
   },
 
   methods: {
     getShopDaily() {
-      const shopId = uni.getStorageSync("shopId");
-      getShopDaily(shopId).then((res) => {
+      getShopDaily({
+        shopId: this.shopId,
+        begin: this.begin,
+        end: this.end,
+      }).then((res) => {
+        console.log(res);
+      });
+    },
+    getShopHourly() {
+      getShopHourly(this.shopId).then((res) => {
         console.log(res);
       });
     },
     // 日历组件确定事件
     confirm(e) {
-      console.log(e);
+      const {
+        range: { before, after },
+      } = e;
+      this.begin = before;
+      this.end = after;
+      this.getShopDaily();
     },
 
     // 展示日历组件
