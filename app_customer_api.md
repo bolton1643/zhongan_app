@@ -246,9 +246,43 @@ method: post
 			videoFlag: 0|1,是否具备查看视频权限
 		}, 
 		application: { --新店申请
-			
+				
 		},
-		shopList: [] --已有店铺
+		shopList: [{
+          		 "id": "1297535484121083905",
+                "createTime": "2020-08-23 22:05:41",
+                "shopName": "吴文彬的店铺",
+                "shopNo": "000000",
+                "provinceCityCounty": null,
+                "addr": "祥茂路77号",
+                "shopType": "企业",
+                "manager": null,
+                "managerPhone": null,
+                "contact1Name": null,
+                "contact1Phone": "13588826451",
+                "contact2Name": null,
+                "contact2Phone": "13588826451",
+                "armingStatus": "1",
+
+                "comboId": "1294210439211507714",
+                "comboName": 套餐名称,
+                "comboContent": "{\"devices\":[{\"amount\":1,\"deviceType\":\"1\",\"id\":\"15971299552310371342\",\"name\":\"华为好望AI摄像头\",\"price\":200}],\"id\":\"1294210439211507714\",\"packageName\":\"套餐一\",\"serviceDuration\":1,\"serviceEffectiveDate\":1569164530425,\"serviceExpireDate\":1600786930425,\"services\":[{\"amount\":2,\"id\":\"15975454349840434489\",\"insurance\":0,\"name\":\"综合服务费\",\"price\":560}]}",
+                "serviceEffectiveDate": 服务生效时间
+                "serviceDuration": 服务时效时间
+                "serviceExpireDate": 服务失效时间
+                "serviceStatus": 失效与否状态
+                "coordinate": "3",
+                "latitude": "30.336701",
+                "longitude": "120.111691",
+                "benifitName": 受益人
+                "benifitPhone": 受益人电话
+                "shopPhoto": --门店图片
+                "notes": 备注,
+                "deployTime": --部放时间,
+                "undeployTime": --撤防时间,
+                "armingPhoto": 防区图
+            }
+		},...] --已有店铺
 	}
 }
 ```
@@ -350,6 +384,8 @@ method: get
     latitude --纬度
     coordinate --坐标系 1:百度 2:腾讯 3:高德 4:谷歌
     shopType--店铺典型
+    manager--负责人
+    managerPhone--负责人电话
     benifitPhone--受益人姓名
     benifitName--受益人电话
     contact1Name--联系姓名
@@ -383,7 +419,7 @@ method: get
         }],
         extraDevices:[]  --参照devices，数量可以多个
         extracServices: [] --参照services，数量可以多份
-   }
+   },
 	 shopPhoto--对应图片 ，格式如下
        {
          gate: 门头照
@@ -393,7 +429,14 @@ method: get
          id1: 身份证
          id2: 身份证
        }
-	}
+	},
+	devices: [{
+		id:--
+		zhanyeId: 展业设备id
+		deviceType:
+		deviceName: 名称
+		deviceBrand: 品牌
+	},...]
 }
 ```
 
