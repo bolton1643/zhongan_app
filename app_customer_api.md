@@ -448,10 +448,10 @@ method: get
 url: /shop/packageInfo
 method: get
 params: shopId=*** 店铺标识
---返回报文
+--返回报文，返回值，包含两部分内容，一个是店铺当前已购买的套餐，跟门店明细内的套餐内容一致。另一个字段为optionCombo，标识为标准套餐内的可选先，含设备和服务两个。
 {
 	status:
-	result: {
+		result: {
 			id: --套餐标识
       totalMoney:  --计算后的价格，前端统计，后端会根据信息进行校验
       packageName: --套餐名称
@@ -479,6 +479,36 @@ params: shopId=*** 店铺标识
        }],
        extraDevices:[]  --参照devices，数量可以多个
        extracServices: [] --参照services，数量可以多份
+       optionCombo: {
+            "devices": [
+                {
+                    "deviceType": "1",
+                    "pricce": 1000.0,
+                    "name": "华为好望AI摄像头",
+                    "id": "16005000479560663631"
+                }
+            ],
+            "services": [
+                {
+                    "insurance": 0,
+                    "name": "出警服务",
+                    "pricce": 100.0,
+                    "id": "15982936135811278017"
+                },
+                {
+                    "insurance": 0,
+                    "name": "保险服务",
+                    "pricce": 200.0,
+                    "id": "16007020625331388263"
+                },
+                {
+                    "insurance": 1,
+                    "price": null,
+                    "name": "保险1",
+                    "id": null
+                }
+            ]
+        }
 	}
 }
 ```
