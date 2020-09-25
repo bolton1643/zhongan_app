@@ -1,0 +1,70 @@
+<template>
+	<div>
+		<video :id="id" :src="src" :muted="muted" :controls="controls" :show-fullscreen-btn="showFullscreenBtn"
+		 :enable-progress-gesture="enableProgressGesture" :show-center-play-btn="enableProgressGesture" :object-fit="objectFit"></video>
+	</div>
+</template>
+
+<script>
+	export default {
+		name: "public-video",
+
+		props: {
+			id: {
+				type: String,
+				default: ""
+			},
+			src: {
+				type: String,
+				default: ""
+			},
+			muted: {
+				type: Boolean,
+				default: true
+			},
+			controls: {
+				type: Boolean,
+				default: false
+			},
+			showFullscreenBtn: {
+				type: Boolean,
+				default: false
+			},
+			enableProgressGesture: {
+				type: Boolean,
+				default: false
+			},
+			showCenterPlayBtn: {
+				type: Boolean,
+				default: false
+			},
+			objectFit: {
+				type: String,
+				default: "fill"
+			},
+			width: {
+				type: String,
+				default: ""
+			},
+			watchId: {
+				type: String,
+				default: ""
+			}
+		},
+
+		watch: {
+			watchId: function(newVal, oldVal) {
+				console.log(newVal, oldVal);
+				if (oldVal) {
+					uni.createVideoContext(oldVal).pause();
+				}
+				if (newVal) {
+					uni.createVideoContext(newVal).play();
+				}
+			}
+		}
+	}
+</script>
+
+<style>
+</style>

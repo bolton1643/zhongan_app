@@ -1,0 +1,209 @@
+<template>
+	<view class="page-box" :style="{minHeight: height}">
+		<view class="title-column" :style="{height: customBar + 'px', paddingTop: statusBar + 'px'}">
+			<image class="title-action" src="../../static/homepage/icon-return.png" @click="backPage"></image>
+			<text class="title-content" :style="{height: (customBar - statusBar) + 'px', lineHeight: (customBar - statusBar) + 'px'}">视频查询</text>
+			<image class="title-action" src="../../static/homepage/icon-return.png" style="opacity: 0;"></image>
+		</view>
+
+		<view class="content">
+			<swiper class="swiper-box" :indicator-dots="true" indicator-color="#999999" indicator-active-color="#2099FF"
+			 :circular="true" @change="swiperHandleChange">
+				<swiper-item v-for="(item, index) in videoList" :item-id="item.id" :key="index">
+					<public-video :id="'video-id-' + index" :watchId="watchId" :src="item.src" :muted="muted" :width="width"></public-video>
+				</swiper-item>
+			</swiper>
+
+			<view class="operating-box">
+				<image class="smaller-img" src="../../static/homepage/icon-close-audio.png" @click="setMuted"></image>
+
+				<image class="bigger-img" src="../../static/homepage/icon-speaker.png" @touchstart="handleTouchStart" @touchend="handleTouchEnd"
+				 @click="playVoice"></image>
+
+				<image class="smaller-img" src="../../static/homepage/icon-replay.png"></image>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import publicVideo from "../component/public-video.nvue";
+
+	const recorderManager = uni.getRecorderManager();
+	const innerAudioContext = uni.createInnerAudioContext();
+	innerAudioContext.autoplay = true;
+
+	export default {
+		components: {
+			publicVideo
+		},
+
+		data() {
+			return {
+				videoList: [{
+						id: "0",
+						src: "http://qiniu.zaizaihome.com//videode715680a2d847e9a335a0f12eb6d4f1.mp4"
+					},
+					{
+						id: "1",
+						src: "http://qiniu.zaizaihome.com//videode715680a2d847e9a335a0f12eb6d4f1.mp4"
+					},
+					{
+						id: "2",
+						src: "http://qiniu.zaizaihome.com//videode715680a2d847e9a335a0f12eb6d4f1.mp4"
+					}
+				],
+				muted: true,
+				watchId: "",
+				width: "",
+				height: "",
+				statusBar: 0,
+				customBar: 0,
+				voicePath: "",
+				timestamp: null,
+				minTime: 5
+			}
+		},
+
+		onLoad: function(options) {
+			let self = this;
+
+			recorderManager.onStart(function() {
+				self.timestamp = Date.parse(new Date()) / 1000;
+			});
+
+			recorderManager.onStop(function(res) {
+				console.log('recorder stop' + JSON.stringify(res));
+				const timestamp = Date.parse(new Date()) / 1000;
+				if (timestamp - self.timestamp >= self.minTime) {
+					self.voicePath = res.tempFilePath;
+				} else {
+					uni.showToast({
+						title: "录制时间太短",
+						icon: 'none',
+						position: 'bottom'
+					});
+				}
+			});
+		},
+
+		created: function() {
+			const _this = this;
+			uni.getSystemInfo({
+				success: function(e) {
+					console.log(e);
+					_this.statusBar = e.statusBarHeight;
+					if (e.platform == 'android') {
+						_this.customBar = e.statusBarHeight + 50;
+					} else {
+						_this.customBar = e.statusBarHeight + 45;
+					};
+				}
+			});
+
+			console.log('statusBar', this.statusBar);
+			console.log('customBar', this.customBar);
+
+			const width = uni.getSystemInfoSync().windowWidth;
+			this.width = `${width}px`;
+			const height = uni.getSystemInfoSync().windowHeight;
+			this.height = `${height}px`;
+		},
+
+		mounted: function() {
+			this.watchId = "video-id-0";
+		},
+
+		methods: {
+			backPage: function() {
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+
+			swiperHandleChange: function(event) {
+				console.log(event.detail.currentItemId);
+				this.watchId = "video-id-" + event.detail.currentItemId;
+			},
+
+			setMuted: function() {
+				this.muted = !this.muted;
+			},
+
+			handleTouchStart: function() {
+				console.log('开始录音');
+				recorderManager.start();
+			},
+
+			handleTouchEnd: function() {
+				console.log('录音结束');
+				recorderManager.stop();
+			},
+
+			playVoice: function() {
+				console.log('播放录音');
+				if (this.voicePath) {
+					innerAudioContext.src = this.voicePath;
+					innerAudioContext.play();
+				} else {
+					uni.showToast({
+						title: "暂无录制",
+						icon: 'none',
+						position: 'bottom'
+					});
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="less">
+	.page-box {
+		background-color: #F0F0F0;
+		flex-direction: column;
+	}
+
+	.content {
+		flex: 1;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.swiper-box {
+		height: 420upx;
+	}
+
+	.operating-box {
+		margin-bottom: 260upx;
+		flex-direction: row;
+		align-items: flex-end;
+		justify-content: space-around;
+	}
+
+	.smaller-img {
+		width: 120upx;
+		height: 120upx;
+	}
+
+	.bigger-img {
+		width: 240upx;
+		height: 240upx;
+	}
+
+	.title-column {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.title-action {
+		width: 32upx;
+		height: 32upx;
+		margin: 0 40upx;
+	}
+
+	.title-content {
+		color: #333333;
+		font-size: 32upx;
+	}
+</style>

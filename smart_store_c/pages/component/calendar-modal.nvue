@@ -1,0 +1,43 @@
+<template>
+	<div>
+		<uni-calendar ref="calendar" :insert="true" :lunar="true" :clearDate="false" :start-date="'2020-1-1'" :end-date="endDate"
+		 @change="change" />
+	</div>
+</template>
+
+<script>
+	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue';
+	export default {
+		components: {
+			uniCalendar
+		},
+
+		data() {
+			return {
+				endDate: ""
+			}
+		},
+
+		mounted: function() {
+			console.log("mounted");
+			const date = new Date();
+			this.endDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+		},
+
+		methods: {
+			change: function(e) {
+				console.log(e);
+				uni.$emit('calendar-modal', {
+					msg: e.fulldate
+				});
+
+				const subNvue = uni.getSubNVueById('calendar-modal'); //获取
+				subNvue.hide(); //隐藏
+			}
+		}
+	}
+</script>
+
+<style>
+
+</style>
