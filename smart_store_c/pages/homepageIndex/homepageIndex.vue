@@ -232,12 +232,16 @@ export default {
       this.shopInfo = shopList[0];
       this.defenceStatus = this.shopInfo.armingStatus == "1";
       this.getShopHourly();
+      this.saveShopLocal();
     }
     this.cWidth = uni.upx2px(750);
     this.cHeight = uni.upx2px(420);
   },
 
   methods: {
+    saveShopLocal() {
+      uni.setStorageSync("shopId", this.shopInfo.shopId);
+    },
     // 店铺客流查看
     getShopHourly() {
       getShopHourly(this.shopInfo.shopId).then((res) => {

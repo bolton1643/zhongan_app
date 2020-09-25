@@ -8,3 +8,7 @@ export function getShopInfo(shopId) {
 export function getShopHourly(shopId) {
   return tui.request(`/shop/humancount/hourly/${shopId}`, "GET")
 }
+// 客流数据--天
+export function getShopDaily(shopId) {
+  return tui.request(`/shop/humancount/daily/${shopId}`, "GET")
+}
