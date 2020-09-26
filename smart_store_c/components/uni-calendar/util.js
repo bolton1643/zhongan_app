@@ -1,11 +1,17 @@
 import CALENDAR from './calendar.js'
 
 class Calendar {
-  constructor({ date, selected, startDate, endDate, range } = {}) {
+  constructor({
+    date,
+    selected,
+    startDate,
+    endDate,
+    range
+  } = {}) {
     // 当前日期
     this.date = this.getDate(new Date()) // 当前初入日期
     // 打点信息
-    this.selected = selected || []
+    this.selected = selected || [];
     // 范围开始
     this.startDate = startDate
     // 范围结束
@@ -43,6 +49,7 @@ class Calendar {
   resetSatrtDate(startDate) {
     // 范围开始
     this.startDate = startDate
+
   }
 
   /**
@@ -91,6 +98,7 @@ class Calendar {
     }
   }
 
+
   /**
    * 获取上月剩余天数
    */
@@ -115,17 +123,17 @@ class Calendar {
     let fullDate = this.date.fullDate
     for (let i = 1; i <= dateData; i++) {
       let isinfo = false
-      let nowDate = full.year + '-' + (full.month < 10 ? full.month : full.month) + '-' + (i < 10 ? '0' + i : i)
+      let nowDate = full.year + '-' + (full.month < 10 ?
+        full.month : full.month) + '-' + (i < 10 ?
+          '0' + i : i)
       // 是否今天
       let isDay = fullDate === nowDate
       // 获取打点信息
-      let info =
-        this.selected &&
-        this.selected.find(item => {
-          if (this.dateEqual(nowDate, item.date)) {
-            return item
-          }
-        })
+      let info = this.selected && this.selected.find((item) => {
+        if (this.dateEqual(nowDate, item.date)) {
+          return item
+        }
+      })
 
       // 日期禁用
       let disableBefore = true
@@ -144,7 +152,7 @@ class Calendar {
       let multiplesStatus = -1
       if (this.range) {
         if (multiples) {
-          multiplesStatus = multiples.findIndex(item => {
+          multiplesStatus = multiples.findIndex((item) => {
             return this.dateEqual(item, nowDate)
           })
         }
@@ -230,6 +238,7 @@ class Calendar {
     }
   }
 
+
   /**
    * 获取日期范围内所有日期
    * @param {Object} begin
@@ -245,7 +254,7 @@ class Calendar {
     de.setFullYear(ae[0], ae[1] - 1, ae[2])
     var unixDb = db.getTime() - 24 * 60 * 60 * 1000
     var unixDe = de.getTime() - 24 * 60 * 60 * 1000
-    for (var k = unixDb; k <= unixDe; ) {
+    for (var k = unixDb; k <= unixDe;) {
       k = k + 24 * 60 * 60 * 1000
       arr.push(this.getDate(new Date(parseInt(k))).fullDate)
     }
@@ -269,7 +278,10 @@ class Calendar {
    *  获取多选状态
    */
   setMultiple(fullDate) {
-    let { before, after } = this.multipleStatus
+    let {
+      before,
+      after
+    } = this.multipleStatus
 
     if (!this.range) return
     if (before && after) {
@@ -283,9 +295,9 @@ class Calendar {
       } else {
         this.multipleStatus.after = fullDate
         if (this.dateCompare(this.multipleStatus.before, this.multipleStatus.after)) {
-          this.multipleStatus.data = this.geDateAll(this.multipleStatus.before, this.multipleStatus.after)
+          this.multipleStatus.data = this.geDateAll(this.multipleStatus.before, this.multipleStatus.after);
         } else {
-          this.multipleStatus.data = this.geDateAll(this.multipleStatus.after, this.multipleStatus.before)
+          this.multipleStatus.data = this.geDateAll(this.multipleStatus.after, this.multipleStatus.before);
         }
       }
     }
@@ -297,7 +309,13 @@ class Calendar {
    * @param {Object} dateData
    */
   _getWeek(dateData) {
-    const { fullDate, year, month, date, day } = this.getDate(dateData)
+    const {
+      fullDate,
+      year,
+      month,
+      date,
+      day
+    } = this.getDate(dateData)
     let firstDay = new Date(year, month - 1, 1).getDay()
     let currentDay = new Date(year, month, 0).getDate()
     let dates = {
@@ -330,5 +348,6 @@ class Calendar {
   // 	return this.instance;
   // }
 }
+
 
 export default Calendar

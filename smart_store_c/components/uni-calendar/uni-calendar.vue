@@ -1,33 +1,66 @@
 <template>
   <view class="uni-calendar">
-    <view v-if="!insert&&show" class="uni-calendar__mask" :class="{'uni-calendar--mask-show':aniMaskShow}" @click="clean"></view>
-    <view v-if="insert || show" class="uni-calendar__content" :class="{'uni-calendar--fixed':!insert,'uni-calendar--ani-show':aniMaskShow}">
+    <view
+      v-if="!insert && show"
+      class="uni-calendar__mask"
+      :class="{ 'uni-calendar--mask-show': aniMaskShow }"
+      @click="clean"
+    ></view>
+    <view
+      v-if="insert || show"
+      class="uni-calendar__content"
+      :class="{
+        'uni-calendar--fixed': !insert,
+        'uni-calendar--ani-show': aniMaskShow,
+      }"
+    >
       <view v-if="!insert" class="uni-calendar__header uni-calendar--fixed-top">
         <view class="uni-calendar__header-btn-box" @click="close">
-          <text class="uni-calendar__header-text uni-calendar--fixed-width cancel">取消</text>
+          <text
+            class="uni-calendar__header-text uni-calendar--fixed-width cancel"
+            >取消</text
+          >
         </view>
         <view class="uni-calendar__header-btn-title" @click="close">
-          <text class="uni-calendar__header-text uni-calendar--fixed-width title" v-text="title"></text>
+          <text
+            class="uni-calendar__header-text uni-calendar--fixed-width title"
+            v-text="title"
+          ></text>
         </view>
         <view class="uni-calendar__header-btn-box" @click="confirm">
-          <text class="uni-calendar__header-text uni-calendar--fixed-width submit">确定</text>
+          <text
+            class="uni-calendar__header-text uni-calendar--fixed-width submit"
+            >确定</text
+          >
         </view>
       </view>
       <view class="uni-calendar__header space-between">
         <view class="uni-calendar__header-btn-box" @click.stop="pre">
           <view class="uni-calendar__header-btn uni-calendar--left"></view>
         </view>
-        <picker mode="date" :value="date" fields="month" @change="bindDateChange">
-          <text class="uni-calendar__header-text" style="font-weight: 500;">{{( nowDate.month||'') +'月' + (nowDate.year||'') +'年'}}</text>
+        <picker
+          mode="date"
+          :value="date"
+          fields="month"
+          @change="bindDateChange"
+        >
+          <text class="uni-calendar__header-text" style="font-weight: 500">{{
+            (nowDate.month || "") + "月" + (nowDate.year || "") + "年"
+          }}</text>
         </picker>
         <view class="uni-calendar__header-btn-box" @click.stop="next">
           <view class="uni-calendar__header-btn uni-calendar--right"></view>
         </view>
-        <text class="uni-calendar__backtoday" v-if="needTodayBtn" @click="backtoday">回到今天</text>
+        <text
+          class="uni-calendar__backtoday"
+          v-if="needTodayBtn"
+          @click="backtoday"
+          >回到今天</text
+        >
       </view>
       <view class="uni-calendar__box">
         <view v-if="showMonth" class="uni-calendar__box-bg">
-          <text class="uni-calendar__box-bg-text">{{nowDate.month}}</text>
+          <text class="uni-calendar__box-bg-text">{{ nowDate.month }}</text>
         </view>
         <view class="uni-calendar__weeks">
           <view class="uni-calendar__weeks-day">
@@ -52,9 +85,23 @@
             <text class="uni-calendar__weeks-day-text">六</text>
           </view>
         </view>
-        <view class="uni-calendar__weeks" v-for="(item,weekIndex) in weeks" :key="weekIndex">
-          <view class="uni-calendar__weeks-item" v-for="(weeks,weeksIndex) in item" :key="weeksIndex">
-            <calendar-item :weeks="weeks" :calendar="calendar" :selected="selected" :lunar="lunar" @change="choiceDate"></calendar-item>
+        <view
+          class="uni-calendar__weeks"
+          v-for="(item, weekIndex) in weeks"
+          :key="weekIndex"
+        >
+          <view
+            class="uni-calendar__weeks-item"
+            v-for="(weeks, weeksIndex) in item"
+            :key="weeksIndex"
+          >
+            <calendar-item
+              :weeks="weeks"
+              :calendar="calendar"
+              :selected="selected"
+              :lunar="lunar"
+              @change="choiceDate"
+            ></calendar-item>
           </view>
         </view>
       </view>
@@ -63,8 +110,8 @@
 </template>
 
 <script>
-import Calendar from './util.js'
-import calendarItem from './uni-calendar-item.vue'
+import Calendar from "./util.js";
+import calendarItem from "./uni-calendar-item.vue";
 /**
  * Calendar 日历
  * @description 日历组件可以查看日期，选择任意范围内的日期，打点操作。常用场景如：酒店日期预订、火车机票选择购买日期、上下班打卡等
@@ -92,12 +139,12 @@ export default {
   props: {
     date: {
       type: String,
-      default: '',
+      default: "",
     },
     selected: {
       type: Array,
       default() {
-        return []
+        return [];
       },
     },
     lunar: {
@@ -106,11 +153,11 @@ export default {
     },
     startDate: {
       type: String,
-      default: '',
+      default: "",
     },
     endDate: {
       type: String,
-      default: '',
+      default: "",
     },
     range: {
       type: Boolean,
@@ -131,7 +178,7 @@ export default {
     // 新增 title
     title: {
       type: String,
-      default: '',
+      default: "",
     },
 
     // 是否需要回到今天按钮
@@ -145,24 +192,24 @@ export default {
       show: false,
       weeks: [],
       calendar: {},
-      nowDate: '',
+      nowDate: "",
       aniMaskShow: false,
-    }
+    };
   },
   watch: {
     date(newVal) {
-      this.cale.setDate(newVal)
-      this.init(this.cale.selectDate.fullDate)
+      this.cale.setDate(newVal);
+      this.init(this.cale.selectDate.fullDate);
     },
     startDate(val) {
-      this.cale.resetSatrtDate(val)
+      this.cale.resetSatrtDate(val);
     },
     endDate(val) {
-      this.cale.resetEndDate(val)
+      this.cale.resetEndDate(val);
     },
     selected(newVal) {
-      this.cale.setSelectInfo(this.nowDate.fullDate, newVal)
-      this.weeks = this.cale.weeks
+      this.cale.setSelectInfo(this.nowDate.fullDate, newVal);
+      this.weeks = this.cale.weeks;
     },
   },
   created() {
@@ -173,28 +220,28 @@ export default {
       startDate: this.startDate,
       endDate: this.endDate,
       range: this.range,
-    })
+    });
     // 选中某一天
-    this.cale.setDate(this.date)
-    this.init(this.cale.selectDate.fullDate)
+    this.cale.setDate(this.date);
+    this.init(this.cale.selectDate.fullDate);
     // this.setDay
   },
   methods: {
     // 取消穿透
     clean() {},
     bindDateChange(e) {
-      const value = e.detail.value + '-1'
-      console.log(this.cale.getDate(value))
-      this.cale.setDate(value)
-      this.init(value)
+      const value = e.detail.value + "-1";
+      console.log(this.cale.getDate(value));
+      this.cale.setDate(value);
+      this.init(value);
     },
     /**
      * 初始化日期显示
      * @param {Object} date
      */
     init(date) {
-      this.weeks = this.cale.weeks
-      this.nowDate = this.calendar = this.cale.getInfo(date)
+      this.weeks = this.cale.weeks;
+      this.nowDate = this.calendar = this.cale.getInfo(date);
     },
     /**
      * 打开日历弹窗
@@ -202,59 +249,59 @@ export default {
     open() {
       // 弹窗模式并且清理数据
       if (this.clearDate && !this.insert) {
-        this.cale.cleanMultipleStatus()
-        this.cale.setDate(this.date)
-        this.init(this.cale.selectDate.fullDate)
+        this.cale.cleanMultipleStatus();
+        this.cale.setDate(this.date);
+        this.init(this.cale.selectDate.fullDate);
       }
-      this.show = true
+      this.show = true;
       this.$nextTick(() => {
         setTimeout(() => {
-          this.aniMaskShow = true
-        }, 50)
-      })
+          this.aniMaskShow = true;
+        }, 50);
+      });
     },
     /**
      * 关闭日历弹窗
      */
     close() {
-      this.aniMaskShow = false
+      this.aniMaskShow = false;
       this.$nextTick(() => {
         setTimeout(() => {
-          this.show = false
-          this.$emit('close')
-        }, 300)
-      })
+          this.show = false;
+          this.$emit("close");
+        }, 300);
+      });
     },
     /**
      * 确认按钮
      */
     confirm() {
-      this.setEmit('confirm')
-      this.close()
+      this.setEmit("confirm");
+      this.close();
     },
     /**
      * 变化触发
      */
     change() {
-      if (!this.insert) return
-      this.setEmit('change')
+      if (!this.insert) return;
+      this.setEmit("change");
     },
     /**
      * 选择月份触发
      */
     monthSwitch() {
-      let { year, month } = this.nowDate
-      this.$emit('monthSwitch', {
+      let { year, month } = this.nowDate;
+      this.$emit("monthSwitch", {
         year,
         month: Number(month),
-      })
+      });
     },
     /**
      * 派发事件
      * @param {Object} name
      */
     setEmit(name) {
-      let { year, month, date, fullDate, lunar, extraInfo } = this.calendar
+      let { year, month, date, fullDate, lunar, extraInfo } = this.calendar;
       this.$emit(name, {
         range: this.cale.multipleStatus,
         year,
@@ -263,57 +310,59 @@ export default {
         fulldate: fullDate,
         lunar,
         extraInfo: extraInfo || {},
-      })
+      });
     },
     /**
      * 选择天触发
      * @param {Object} weeks
      */
     choiceDate(weeks) {
-      if (weeks.disable) return
-      this.calendar = weeks
+      if (weeks.disable) return;
+      this.calendar = weeks;
       // 设置多选
-      this.cale.setMultiple(this.calendar.fullDate)
-      this.weeks = this.cale.weeks
-      this.change()
+      this.cale.setMultiple(this.calendar.fullDate);
+      this.weeks = this.cale.weeks;
+      this.change();
     },
     /**
      * 回到今天
      */
     backtoday() {
-      console.log(this.cale.getDate(new Date()).fullDate)
-      let date = this.cale.getDate(new Date()).fullDate
-      this.cale.setDate(date)
-      this.init(date)
-      this.change()
+      console.log(this.cale.getDate(new Date()).fullDate);
+      let date = this.cale.getDate(new Date()).fullDate;
+      this.cale.setDate(date);
+      this.init(date);
+      this.change();
     },
     /**
      * 上个月
      */
     pre() {
-      const preDate = this.cale.getDate(this.nowDate.fullDate, -1, 'month').fullDate
-      this.setDate(preDate)
-      this.monthSwitch()
+      const preDate = this.cale.getDate(this.nowDate.fullDate, -1, "month")
+        .fullDate;
+      this.setDate(preDate);
+      this.monthSwitch();
     },
     /**
      * 下个月
      */
     next() {
-      const nextDate = this.cale.getDate(this.nowDate.fullDate, +1, 'month').fullDate
-      this.setDate(nextDate)
-      this.monthSwitch()
+      const nextDate = this.cale.getDate(this.nowDate.fullDate, +1, "month")
+        .fullDate;
+      this.setDate(nextDate);
+      this.monthSwitch();
     },
     /**
      * 设置日期
      * @param {Object} date
      */
     setDate(date) {
-      this.cale.setDate(date)
-      this.weeks = this.cale.weeks
-      this.nowDate = this.cale.getInfo(date)
+      this.cale.setDate(date);
+      this.weeks = this.cale.weeks;
+      this.nowDate = this.cale.getInfo(date);
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

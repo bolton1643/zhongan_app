@@ -57,7 +57,7 @@
     </view>
     <view class="cu-modal show meal-modal" v-if="showModal">
       <view class="cu-dialog">
-        <text class="modal-text">套餐7天即将到期</text>
+        <text class="modal-text">套餐{{ lastDay }}天即将到期</text>
         <view class="modal-content">请及时续费，以免影响您的使用</view>
         <view class="modal-image">
           <image src="../../static/homepage/meal.png"></image>
@@ -160,8 +160,9 @@ export default {
       },
       chartLine: null,
       defenceStatus: false, // 布撤防状态 true 已布防 false已撤防
-      defenceTextTip: '您的套餐还有30天即将到期',
-      defenceTime: '',
+      defenceTextTip: "您的套餐还有30天即将到期",
+      defenceTime: "",
+      lastDay: "", // 套餐剩余过期天数
       showModal: false,
       shopInfo: {},
       shopList: [],
@@ -198,10 +199,11 @@ export default {
     const shopList = uni.getStorageSync('smart_c_shopList')
     this.shopList = shopList || []
     if (this.shopList.length) {
-      this.shopInfo = shopList[0]
-      this.defenceStatus = this.shopInfo.armingStatus == '1'
-      this.getShopHourly()
-      this.saveShopLocal()
+      this.shopInfo = shopList[0];
+      this.defenceStatus = this.shopInfo.armingStatus == "1";
+      this.saveShopLocal();
+      this.getShopHourly();
+      this.getShopInfo();
     }
     this.cWidth = uni.upx2px(750)
     this.cHeight = uni.upx2px(420)
@@ -209,13 +211,25 @@ export default {
 
   methods: {
     saveShopLocal() {
-      uni.setStorageSync('shopId', this.shopInfo.shopId)
+      uni.setStorageSync("shopId", this.shopInfo.id);
     },
     // 店铺客流查看
     getShopHourly() {
-      getShopHourly(this.shopInfo.shopId).then((res) => {
-        console.log(res)
-      })
+      getShopHourly(this.shopInfo.id).then((res) => {
+        console.log(res);
+      });
+    },
+    // 获取店铺信息，计算过期时间
+    getShopInfo() {
+      getShopInfo(this.shopInfo.id).then((res) => {
+        const now = new Date().getTime();
+        const endTime = res.result.serviceExpireDate;
+        const day = Math.floor((endTime - now) / 1000 / 60 / 60 / 24);
+        if (day <= 7) {
+          this.showModal = true;
+          this.lastDay = day;
+        }
+      });
     },
     getServerData() {
       this.showLineA('canvasLine', this.chartData)
@@ -308,10 +322,8 @@ export default {
 
     // 立即续费
     getMeal() {
-      this.modalClose()
-      setTimeout(() => {
-        this.getSubMenu({ url: './meal/meal' })
-      }, 1000)
+      this.modalClose();
+      this.getSubMenu({ url: "./meal/meal" });
     },
 
     // 模态框关闭

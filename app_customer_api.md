@@ -4,13 +4,13 @@
 
 ```
 接口分为三个部分，前缀分别为
-* /api 
+* /api
 * /api/cuser
 * /api/tuser
 对应web,APP C端(商户)，APP T端(合伙人)
 
   前置条件，除登录、获取验证码接口外，所有调用接口必须在请求的headerz中增加参数与值
-  X-Access-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTU4NTE4NDQsInVzZXJuYW1lIjoiYWRtaW4ifQ.-ujBuq4Bnx--Vhy_amoKjDoJnIcnoevurNqTS_Bfbnk 
+  X-Access-Token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTU4NTE4NDQsInVzZXJuYW1lIjoiYWRtaW4ifQ.-ujBuq4Bnx--Vhy_amoKjDoJnIcnoevurNqTS_Bfbnk
   token为登录时返回值
   非get请求，请求body为json对象，所有请求Content-Type: application/json
   返回的结果，为json格式。包含字段至少包含status/timestamp/message等字段。status值参考标准http协议，非200，可认为出错，错误信息读取message字段。如status字段值为200，表示请求正确。具体返回值参考result字段。
@@ -24,7 +24,7 @@
 	  "records":[{"updateTime":"2020-08-08 19:31:23","custName":"张三1",...},...],
 	   "total":26,                --总记录数
 	   "size":10,                 --每页数量
-	   "current":1,               --当前页码 
+	   "current":1,               --当前页码
 	   "orders":[],
 	   "optimizeCountSql":true,
 	   "hitCount":false,
@@ -164,7 +164,7 @@ params: shopId=**
 			unRead: 未读数量
 		}
 	]
-}	
+}
 ```
 
 
@@ -200,7 +200,7 @@ method: post
 返回报文
 {
 	status: 200
-    
+
 }
 ```
 
@@ -244,6 +244,7 @@ method: post
 			name: 姓名
 			role: 1|2,管理员,一般操作员
 			videoFlag: 0|1,是否具备查看视频权限
+<<<<<<< HEAD
 		}, 
 		application: { --新店申请
 <<<<<<< HEAD
@@ -252,6 +253,11 @@ method: post
 		shopList: [] --已有店铺
 =======
 				
+=======
+		},
+		application: { --新店申请
+
+>>>>>>> 3266027ac3841a4a701859d23f5c6822a9fdc4d4
 		},
 		shopList: [{
           		 "id": "1297535484121083905",
@@ -288,7 +294,10 @@ method: post
                 "armingPhoto": 防区图
             }
 		},...] --已有店铺
+<<<<<<< HEAD
 >>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
+=======
+>>>>>>> 3266027ac3841a4a701859d23f5c6822a9fdc4d4
 	}
 }
 ```
@@ -365,7 +374,7 @@ method: post
 返回报文
 {
 	status: ***
-}	
+}
 
 ```
 
@@ -391,10 +400,15 @@ method: get
     coordinate --坐标系 1:百度 2:腾讯 3:高德 4:谷歌
     shopType--店铺典型
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     manager--负责人
     managerPhone--负责人电话
 >>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
+=======
+    manager--负责人
+    managerPhone--负责人电话
+>>>>>>> 3266027ac3841a4a701859d23f5c6822a9fdc4d4
     benifitPhone--受益人姓名
     benifitName--受益人电话
     contact1Name--联系姓名
@@ -429,10 +443,14 @@ method: get
         extraDevices:[]  --参照devices，数量可以多个
         extracServices: [] --参照services，数量可以多份
 <<<<<<< HEAD
+<<<<<<< HEAD
    }
 =======
    },
 >>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
+=======
+   },
+>>>>>>> 3266027ac3841a4a701859d23f5c6822a9fdc4d4
 	 shopPhoto--对应图片 ，格式如下
        {
          gate: 门头照
@@ -443,8 +461,11 @@ method: get
          id2: 身份证
        }
 <<<<<<< HEAD
+<<<<<<< HEAD
 	}
 =======
+=======
+>>>>>>> 3266027ac3841a4a701859d23f5c6822a9fdc4d4
 	},
 	devices: [{
 		id:--
@@ -453,7 +474,10 @@ method: get
 		deviceName: 名称
 		deviceBrand: 品牌
 	},...]
+<<<<<<< HEAD
 >>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
+=======
+>>>>>>> 3266027ac3841a4a701859d23f5c6822a9fdc4d4
 }
 ```
 
@@ -632,7 +656,7 @@ params: shopId=***&start=***&end=****&pageNo&pageSize 门店标识，开始时�
 	  		"operator": 操作人},...],
 	   "total":26,                --总记录数
 	   "size":10,                 --每页数量
-	   "current":1,               --当前页码 
+	   "current":1,               --当前页码
 	   "pages":3                  --总页数
 	 },
 }
@@ -817,7 +841,7 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&status=**(状态
 		},...],
 		total:26,                --总记录数
 	  size:10,                 --每页数量
-	  current:1,               --当前页码 
+	  current:1,               --当前页码
 	  pages:3                  --总页数
 	}
 }
@@ -958,7 +982,7 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&repairStatus=**(
 		},...],
 		total:26,                --总记录数
 	  size:10,                 --每页数量
-	  current:1,               --当前页码 
+	  current:1,               --当前页码
 	  pages:3                  --总页数
 	}
 }
@@ -1040,7 +1064,7 @@ params: pageNo=**&pageSize=**
 	  	},...],
 	   "total":26,                --总记录数
 	   "size":10,                 --每页数量
-	   "current":1,               --当前页码 
+	   "current":1,               --当前页码
 	   "pages":3                  --总页数
 	 },
 ```
@@ -1064,7 +1088,7 @@ params: pageNo=**&pageSize=**&flag=0|1  为兑换
 	  	},...],
 	   "total":26,                --总记录数
 	   "size":10,                 --每页数量
-	   "current":1,               --当前页码 
+	   "current":1,               --当前页码
 	   "pages":3                  --总页数
 	 },
 ```
