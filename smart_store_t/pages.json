@@ -1,0 +1,307 @@
+{
+    "pages" : [
+        //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+        {
+            "path" : "pages/login/login",
+            "style" : {}
+        },
+        {
+            "path" : "pages/login/forget",
+            "style" : {}
+        },
+        {
+            "path" : "pages/login/register",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/home",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/home2",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/addInstall",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/warning",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/warningDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/dealWarning",
+            "style" : {}
+        },
+        {
+            "path" : "pages/my/my",
+            "style" : {}
+        },
+        {
+            "path" : "pages/my/myMoney",
+            "style" : {}
+        },
+        {
+            "path" : "pages/my/baseInfo",
+            "style" : {}
+        },
+        {
+            "path" : "pages/message/messagelist",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/home",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/becomepartner",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/partnerlist",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/placemanage",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/placemanageList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/placemanageDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/index/index",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexT/index",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/layout",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/background",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/text",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/icon",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/button",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/design",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/tag",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/avatar",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/progress",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/shadow",
+            "style" : {}
+        },
+        {
+            "path" : "pages/basics/loading",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/bar",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/nav",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/list",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/card",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/form",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/timeline",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/chat",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/swiper",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/modal",
+            "style" : {}
+        },
+        {
+            "path" : "pages/component/steps",
+            "style" : {}
+        },
+        {
+            "path" : "pages/plugin/indexes",
+            "style" : {}
+        },
+        {
+            "path" : "pages/plugin/animation",
+            "style" : {}
+        },
+        {
+            "path" : "pages/plugin/drawer",
+            "style" : {}
+        },
+        {
+            "path" : "pages/plugin/verticalnav",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/addInstall",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/installList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/installDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/repairList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/repairDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/packageList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/packageDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/devices/deviceslist",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/devices/devicesDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/log/logList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/warning/warningHistoryList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/warning/warningHistoryDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/repair/repairHistoryList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/repair/repairHistoryDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/money/moneyHistoryList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/money/moneyHistoryDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/order/orderDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/indexgroup/warning/warningVideoDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/fangqu/fangquDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/manage/achievement/achievementDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/my/myMoneyList",
+            "style" : {}
+        },
+        {
+            "path" : "pages/my/myMoneyDetail",
+            "style" : {}
+        },
+        {
+            "path" : "pages/my/forgetPassword",
+            "style" : {}
+        },
+        {
+            "path" : "pages/plugin/home",
+            "style" : {}
+        }
+    ],
+    "globalStyle" : {
+        "mp-alipay" : {
+            /* 支付宝小程序特有相关 */
+            "transparentTitle" : "always",
+            "allowsBounceVertical" : "NO"
+        },
+        "navigationBarBackgroundColor" : "#ffffff",
+        "navigationBarTitleText" : "demo",
+        "navigationStyle" : "custom",
+        "navigationBarTextStyle" : "white"
+    }
+}
+// "usingComponts": true,
+// 	"condition": { //模式配置，仅开发期间生效
+// 	"current": 0, //当前激活的模式(list 的索引项)
+// 	"list": [{
+// 			"name": "表单", //模式名称
+// 			"path": "pages/indexgroup/addInstall", //启动页面
+// 			"query": "" //启动参数
+// 		}
+// 	]
+// }
+

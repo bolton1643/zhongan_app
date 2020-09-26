@@ -246,9 +246,49 @@ method: post
 			videoFlag: 0|1,是否具备查看视频权限
 		}, 
 		application: { --新店申请
+<<<<<<< HEAD
 			
 		},
 		shopList: [] --已有店铺
+=======
+				
+		},
+		shopList: [{
+          		 "id": "1297535484121083905",
+                "createTime": "2020-08-23 22:05:41",
+                "shopName": "吴文彬的店铺",
+                "shopNo": "000000",
+                "provinceCityCounty": null,
+                "addr": "祥茂路77号",
+                "shopType": "企业",
+                "manager": null,
+                "managerPhone": null,
+                "contact1Name": null,
+                "contact1Phone": "13588826451",
+                "contact2Name": null,
+                "contact2Phone": "13588826451",
+                "armingStatus": "1",
+
+                "comboId": "1294210439211507714",
+                "comboName": 套餐名称,
+                "comboContent": "{\"devices\":[{\"amount\":1,\"deviceType\":\"1\",\"id\":\"15971299552310371342\",\"name\":\"华为好望AI摄像头\",\"price\":200}],\"id\":\"1294210439211507714\",\"packageName\":\"套餐一\",\"serviceDuration\":1,\"serviceEffectiveDate\":1569164530425,\"serviceExpireDate\":1600786930425,\"services\":[{\"amount\":2,\"id\":\"15975454349840434489\",\"insurance\":0,\"name\":\"综合服务费\",\"price\":560}]}",
+                "serviceEffectiveDate": 服务生效时间
+                "serviceDuration": 服务时效时间
+                "serviceExpireDate": 服务失效时间
+                "serviceStatus": 失效与否状态
+                "coordinate": "3",
+                "latitude": "30.336701",
+                "longitude": "120.111691",
+                "benifitName": 受益人
+                "benifitPhone": 受益人电话
+                "shopPhoto": --门店图片
+                "notes": 备注,
+                "deployTime": --部放时间,
+                "undeployTime": --撤防时间,
+                "armingPhoto": 防区图
+            }
+		},...] --已有店铺
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 	}
 }
 ```
@@ -350,6 +390,11 @@ method: get
     latitude --纬度
     coordinate --坐标系 1:百度 2:腾讯 3:高德 4:谷歌
     shopType--店铺典型
+<<<<<<< HEAD
+=======
+    manager--负责人
+    managerPhone--负责人电话
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
     benifitPhone--受益人姓名
     benifitName--受益人电话
     contact1Name--联系姓名
@@ -383,7 +428,11 @@ method: get
         }],
         extraDevices:[]  --参照devices，数量可以多个
         extracServices: [] --参照services，数量可以多份
+<<<<<<< HEAD
    }
+=======
+   },
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 	 shopPhoto--对应图片 ，格式如下
        {
          gate: 门头照
@@ -393,7 +442,18 @@ method: get
          id1: 身份证
          id2: 身份证
        }
+<<<<<<< HEAD
 	}
+=======
+	},
+	devices: [{
+		id:--
+		zhanyeId: 展业设备id
+		deviceType:
+		deviceName: 名称
+		deviceBrand: 品牌
+	},...]
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 }
 ```
 
@@ -405,10 +465,17 @@ method: get
 url: /shop/packageInfo
 method: get
 params: shopId=*** 店铺标识
+<<<<<<< HEAD
 --返回报文
 {
 	status:
 	result: {
+=======
+--返回报文，返回值，包含两部分内容，一个是店铺当前已购买的套餐，跟门店明细内的套餐内容一致。另一个字段为optionCombo，标识为标准套餐内的可选先，含设备和服务两个。
+{
+	status:
+		result: {
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 			id: --套餐标识
       totalMoney:  --计算后的价格，前端统计，后端会根据信息进行校验
       packageName: --套餐名称
@@ -416,10 +483,22 @@ params: shopId=*** 店铺标识
       serviceMoney: --服务价格
 	    serviceEffectiveDate--服务生效时间yyyy-mm-dd
     	serviceDuration--服务年限
+<<<<<<< HEAD
     	insuranceEffectiveDate--保险生效时间
     	insuranceDuration--保险年限
     	benifitName--受益人
     	shopOwner--投保人
+=======
+    	insurance: {
+    		endDate--保险失效时间
+				beginDate--保险生效时间
+	    	benifitName--受益人
+    		insuranerName--投保人
+    		insuraneeName--被保人
+    		insuranceAmount--保额
+    		insuranceFile--保单
+    	}
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
       devices: [{
       			id: 标识
             deviceType: 1 --设备，2烟感 3 门磁
@@ -435,7 +514,41 @@ params: shopId=*** 店铺标识
             insurance: 0|1 1为保险
        }],
        extraDevices:[]  --参照devices，数量可以多个
+<<<<<<< HEAD
        extracServices: [] --参照services，数量可以多份
+=======
+       extracServices: [] --参照services，数量可以多份,
+       optionCombo: {
+            "devices": [
+                {
+                    "deviceType": "1",
+                    "pricce": 1000.0,
+                    "name": "华为好望AI摄像头",
+                    "id": "16005000479560663631"
+                }
+            ],
+            "services": [
+                {
+                    "insurance": 0,
+                    "name": "出警服务",
+                    "pricce": 100.0,
+                    "id": "15982936135811278017"
+                },
+                {
+                    "insurance": 0,
+                    "name": "保险服务",
+                    "pricce": 200.0,
+                    "id": "16007020625331388263"
+                },
+                {
+                    "insurance": 1,
+                    "price": null,
+                    "name": "保险1",
+                    "id": null
+                }
+            ]
+        }
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 	}
 }
 ```
@@ -551,6 +664,11 @@ params: shopId=**  门店标识
 --返回报文
 {
 	result:[ {
+<<<<<<< HEAD
+=======
+	  id: --标识
+	  deviceType: ** --1 摄像头、2烟感  3门磁
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 		deviceName: *** --设备名称
 		status: *** --状态 离线|在线
 	},...]
@@ -675,14 +793,26 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&status=**(状态
 	result: {
 		records:[{
 			{
+<<<<<<< HEAD
+=======
+			  id: 标识
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 				shopId:--店铺标识
 				shopName:--店铺名称
 				shopNo--店铺编号
 				stolenDate--被盗日期
 				claimAmount--申报金额
 				photo--图片
+<<<<<<< HEAD
 				status--状态
 				payAmount--理赔金额
+=======
+				status--状态  1待审核、2审核通过，3：已支付 4审核未通过
+				payAmount--理赔金额
+				claimBy--申报人
+				notes--审核意见
+				createTime--申报时间
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 			}
 		},...],
 		total:26,                --总记录数
@@ -695,6 +825,37 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&status=**(状态
 
 
 
+<<<<<<< HEAD
+=======
+#### 理赔明细
+
+```
+url: /shop/claim/detail/{claimId}
+method: get
+--返回报文
+{
+	result: {
+	id: 标识
+				shopId:--店铺标识
+				shopName:--店铺名称
+				shopNo--店铺编号
+				stolenDate--被盗日期
+				claimAmount--申报金额
+				photo--图片
+				status--状态  1待审核、2审核通过，3：已支付 4审核未通过
+				payAmount--理赔金额
+				claimBy--申报人
+				notes--审核意见
+				createTime--申报时间
+	}
+}
+```
+
+
+
+
+
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 #### 理赔申请（ok)
 
 ```
@@ -721,6 +882,30 @@ method: post
 
 
 
+<<<<<<< HEAD
+=======
+#### 理赔修改（ok)
+
+```
+url: /shop/claim/modify
+method: post  
+请求参数：可修改图片和申报理赔金额
+{
+	id: 标识
+	photo: 图片
+	claimAmount: 理赔金额
+}
+--
+{
+	status: 200
+}
+```
+
+
+
+
+
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 #### 报修申请（ok)
 
 ```
@@ -781,14 +966,12 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&repairStatus=**(
 
 
 
+<<<<<<< HEAD
 #### 套餐续费
 
 ```
 
-```
-
-
-
+=======
 #### 套餐变更
 
 ```
@@ -798,6 +981,39 @@ params: shopId=** 门店信息
 --返回报文
 {
 	status
+}
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
+```
+
+
+
+<<<<<<< HEAD
+#### 套餐变更
+
+```
+url: /shop/combo/change
+method: get
+params: shopId=** 门店信息
+--返回报文
+{
+	status
+=======
+#### 套餐续费
+
+```
+url: /shop/combo/renew
+method: get
+params: shopId=**&period=**&channel=** 门店信息|时长（年,不填默认一年)|支付渠道必填(ali|wx)
+--返回报文
+{
+  
+	status:200
+	result: {
+		outTradeNo: 订单号
+	  tradeNo: 订单套
+	  totalMoney:**
+	}
+>>>>>>> 65c0952633316de82cadc6788a24e08b445f9db2
 }
 ```
 

@@ -1,0 +1,159 @@
+<template>
+	<div>
+		
+		<xk-video
+		ref="video" 
+		style="width:750px;height:422px;background-color: black"
+		title="我是测试的标题" 
+		autoPlay="true"
+		:srcList="srcList"
+		:playIndex="playIndex"
+		@onPlaying="onPlaying" 
+		@onStart="onStart"
+		@onPause="onPause"
+		@onPrepared="onPrepared"
+		@onCompletion="onCompletion"
+		@onSeekComplete="onSeekComplete"
+		@onError="onError"
+		@onFullScreen="onFullScreen"
+		@onNormalScreen="onNormalScreen"
+		>
+		</xk-video>
+		<view style="flex: 1; ">
+			<view class="solids-bottom padding-xs flex align-center">
+				<view class="padding">18</view>
+				<view class="flex-sub text-center">
+					<view class="solid-bottom text-xl padding">
+						<text class="text-black text-bold">您的订单已提交成功！</text>
+					</view>
+					<view class="padding">页面大标题，用于结果页等单一信息页</view>
+				</view>
+			</view>
+		</view>
+		
+		
+		
+		
+		
+	<!-- 	<div style="flex: 1;align-items: center;justify-content: center">
+			<text>播放进度:{{text}}</text>
+			<text>当前位置:{{currentTime}}</text>
+			<text>总时长:{{duration}}</text>
+			<text style="margin-top: 20px">播放状态:{{status}}</text>
+			<text style="margin-top: 20px">窗口模式:{{mode}}</text>
+			<text @click="play" style="margin-top: 20px">播放</text>
+			<text @click="pause" style="margin-top: 20px">暂停</text>
+			<text @click="full" style="margin-top: 20px">全屏</text>
+			<text @click="seek" style="margin-top: 20px">跳转30s</text>
+			
+			<text @click="setParams" style="margin-top: 20px">切换视频源</text>
+		</div> -->
+		
+	</div>
+</template>
+<script>
+	export default {
+		components: {},
+		data() {
+			return {
+				playIndex:1,
+				srcList: [{
+					name: '标清',
+					url: 'http://1252463788.vod2.myqcloud.com/95576ef5vodtransgzp1252463788/e1ab85305285890781763144364/v.f10.mp4'
+				}, {
+					name: '高清',
+					url: 'http://1252463788.vod2.myqcloud.com/95576ef5vodtransgzp1252463788/e1ab85305285890781763144364/v.f20.mp4'
+				}, {
+					name: '超清',
+					url: 'http://1252463788.vod2.myqcloud.com/95576ef5vodtransgzp1252463788/e1ab85305285890781763144364/v.f30.mp4'
+				}],
+				text: '',
+				currentTime :0,
+				duration:0,
+				status:'等待中',
+				mode:'普通'
+			}
+		},
+		props: {},
+		methods: {
+			setParams(){
+				let srcList =   [{
+					name: '标清',
+					url: 'http://1252463788.vod2.myqcloud.com/95576ef5vodtransgzp1252463788/28742df34564972819219071568/v.f210.m3u8'
+				},{
+					name: '高清',
+					url: 'http://1252463788.vod2.myqcloud.com/95576ef5vodtransgzp1252463788/28742df34564972819219071568/v.f220.m3u8'
+				},{
+					name: '超清',
+					url: 'http://1252463788.vod2.myqcloud.com/95576ef5vodtransgzp1252463788/28742df34564972819219071568/v.f230.m3u8'
+				}];
+				let playIndex = 2;
+				let liveMode = false;
+				let title = '新视频的标题';
+				
+				this.$refs.video.setParams({
+					srcList:srcList,
+					playIndex:playIndex,
+					liveMode:liveMode,
+					title:title
+				})
+			},
+			play() {
+				this.$refs.video.play()
+			},
+			pause() {
+				this.$refs.video.pause()
+			},
+			full() {
+				this.$refs.video.fullScreen()
+			},
+			seek() {
+				this.$refs.video.seek(30000) //调转时间，单位毫秒
+			},
+			onPlaying(p) {
+				let percent = p.percent || p.detail.percent;
+				this.text = parseInt(percent * 100) + '%'
+				this.currentTime = p.currentTime || p.detail.currentTime;
+				this.duration = p.duration || p.detail.duration ;
+			},
+			onStart(){
+				this.status = '正在播放'
+			},
+			onPrepared(){
+				this.status='准备播放'
+			},
+			onPause(){
+				this.status = '暂停'
+			},
+			onCompletion(){
+				this.status = '播放结束'
+			},
+			onSeekComplete(){
+				this.status = '跳转结束'
+			},
+			onError(){
+				this.status = '播放错误'
+			},
+			onFullScreen(){
+				this.mode = '全屏';
+				plus.navigator.setFullscreen(true);
+			},
+			onNormalScreen(){
+				plus.navigator.setFullscreen(false);
+				setTimeout(() => {
+					this.mode = '普通'
+				}, 2000); //延迟2s执行以避免看不到状态切换
+				
+			},
+			onLoad(p) {
+
+			}
+		},
+		created() {
+
+		}
+	}
+</script>
+<style scoped>
+ 
+</style>
