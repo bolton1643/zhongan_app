@@ -12,13 +12,17 @@
         <uni-swipe-action-item v-for="(item, index) in swipeList" :key="item.id" @change="swipeChange($event, index)">
           <view class="content-item">
             <view class="content-box">
-              <image class="content-avatar" src="../../../static/homepage/icon-default-avatar.png"></image>
+              <!-- ../../../static/homepage/icon-default-avatar.png -->
+              <image class="content-avatar" :src="item.photo"></image>
               <view class="text-box">
                 <text class="text-name">{{ item.name }}</text>
                 <text class="text-phone">{{ item.phone }}</text>
               </view>
             </view>
-            <image v-if="item.showIconEnter" class="icon-enter" src="../../../static/homepage/icon-enter.png"></image>
+            <view class="role" :class="{'operator':item.role!=1}">{{item.role==1?'管理员':'操作员'}}</view>
+            <view class="icon-enter" @click="toDetail(item)">
+              <image v-show="item.showIconEnter" src="../../../static/homepage/icon-enter.png"></image>
+            </view>
           </view>
           <template v-slot:right>
             <view class="list-delete" @click="swipeClick($event, index)">
@@ -32,36 +36,13 @@
 </template>
 
 <script>
-import { getOperatorList } from '../../../api'
+import { getOperatorList, deleteOperator } from '../../../api'
 
 export default {
   data() {
     return {
       swipeList: [],
     }
-  },
-  onReady() {
-    // 模拟延迟赋值
-    this.swipeList = [
-      {
-        id: 0,
-        name: 'item1',
-        phone: '13312341234',
-        showIconEnter: true,
-      },
-      {
-        id: 1,
-        name: 'item2',
-        phone: '12312345678',
-        showIconEnter: true,
-      },
-      {
-        id: 2,
-        name: 'item3',
-        phone: '15512344321',
-        showIconEnter: true,
-      },
-    ]
   },
   created() {
     this.getOperatorList()
@@ -74,8 +55,20 @@ export default {
       getOperatorList(param).then((res) => {
         const { status, result } = res
         if (status === 200) {
-          console.log(result)
+          if (result && result.length > 0) {
+            this.swipeList = result.map((item) => {
+              item.showIconEnter = true
+              item.photo = this.$tui.handleImageUrl(item.photo)
+              return item
+            })
+          }
         }
+      })
+    },
+    toDetail(item) {
+      uni.setStorageSync('operatorData', JSON.stringify(item))
+      uni.navigateTo({
+        url: '/pages/homepage/personInChargeManagement/add-principal',
       })
     },
     addPrincipal() {
@@ -85,20 +78,31 @@ export default {
     },
 
     swipeChange(e, index) {
-      console.log('swipeChange 返回：', e)
-      console.log('swipeChange 当前索引：', index)
+      // console.log('swipeChange 返回：', e)
+      // console.log('swipeChange 当前索引：', index)
       this.swipeList[index].showIconEnter = !this.swipeList[index].showIconEnter
     },
-
+    deleteOperator(index) {
+      const param = {
+        userId: this.swipeList[index].id,
+      }
+      deleteOperator(param).then((res) => {
+        const { status, result, message } = res
+        this.$tui.toast(message)
+        if (status === 200) {
+          this.swipeList.splice(index, 1)
+        }
+      })
+    },
     swipeClick(e, index) {
-      console.log('swipeClick 返回：', e)
-      console.log('swipeClick 当前索引：', index)
+      let _this = this
       uni.showModal({
         title: '提示',
         content: '是否删除',
         success: (res) => {
           if (res.confirm) {
-            this.swipeList.splice(index, 1)
+            // this.swipeList.splice(index, 1)
+            _this.deleteOperator(index)
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
@@ -134,7 +138,23 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-
+      position: relative;
+      .role {
+        position: absolute;
+        bottom: 30upx;
+        left: 60upx;
+        width: 90upx;
+        height: 32upx;
+        background: #1676f4;
+        border-radius: 16upx;
+        font-size: 20upx;
+        color: #fff;
+        line-height: 32upx;
+        text-align: center;
+        &.operator {
+          background: #aaaaaa;
+        }
+      }
       .content-box {
         display: flex;
         align-items: center;
@@ -144,6 +164,7 @@ export default {
           width: 88upx;
           height: 88upx;
           margin-right: 32upx;
+          border-radius: 50%;
         }
 
         .text-box {
@@ -171,6 +192,12 @@ export default {
       .icon-enter {
         width: 32upx;
         height: 32upx;
+        padding: 12upx;
+        box-sizing: content-box;
+        uni-image {
+          height: 100%;
+          width: 100%;
+        }
       }
     }
 

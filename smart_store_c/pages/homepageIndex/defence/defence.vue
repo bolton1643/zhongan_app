@@ -21,6 +21,9 @@
         </view>
       </view>
     </view>
+    <view v-show="isLoadMore">
+      <uni-load-more :status="loadStatus"></uni-load-more>
+    </view>
     <view>
       <uni-calendar ref="calendar" :insert="false" :needTodayBtn="false" :showMonth="false" title="请选择查询时间" :lunar="false" :range="true" :clearDate="false" @confirm="confirm">
       </uni-calendar>
@@ -30,87 +33,86 @@
 
 <script>
 const calendarImage = require('../../../static/homepage/defence/calendar.png')
-import { getDeployList } from '../../../api'
+import { getDeployList } from '@/api'
+import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
+
 export default {
+  components: {
+    uniLoadMore,
+  },
   data() {
     return {
       calendarImage,
-      record: [
-        {
-          time: '8月18日',
-          isNow: true,
-          list: [
-            {
-              type: 1,
-              name: '张三',
-              time: '09:05:16',
-            },
-            {
-              type: 0,
-              name: '张三',
-              time: '09:05:16',
-            },
-            {
-              type: 1,
-              name: '张三',
-              time: '09:05:16',
-            },
-          ],
-        },
-        {
-          time: '8月17日',
-          isNow: false,
-          list: [
-            {
-              type: 1,
-              name: '张三',
-              time: '09:05:16',
-            },
-            {
-              type: 0,
-              name: '张三',
-              time: '09:05:16',
-            },
-            {
-              type: 1,
-              name: '张三',
-              time: '09:05:16',
-            },
-          ],
-        },
-      ],
+      page: 1,
+      pageSize: 10,
+      record: [],
+      isLoadMore: false, //是否加载中
+      loadStatus: 'loading', //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
     }
   },
   created() {
+    this.startTime = ''
+    this.endTime = ''
     this.getDeployList()
+  },
+  onReachBottom() {
+    if (!this.isLoadMore) {
+      //此处判断，上锁，防止重复请求
+      this.isLoadMore = true
+      this.page += 1
+      this.getDeployList()
+    }
   },
   methods: {
     // 日历组件确定事件
     confirm(e) {
-      let start = e.range.before + ' 00:00:00'
-      let end = e.range.after + ' 23:59:59'
-      this.getDeployList(start, end)
+      this.startTime = e.range.before + ' 00:00:00'
+      this.endTime = e.range.after + ' 23:59:59'
+      this.getDeployList()
     },
 
     // 展示日历组件
     showCalendar() {
       this.$refs.calendar.open()
     },
-    getDeployList(start = '', end = '') {
+    handlePage() {
+      this.isLoadMore = false
+      if (this.page > 1) {
+        this.page -= 1
+      }
+    },
+    getDeployList() {
       const param = {
         shopId: uni.getStorageSync('shopId'),
-        start: start,
-        end: end,
-        pageNo: 1,
-        pageSize: 100000,
+        start: this.startTime,
+        end: this.endTime,
+        pageNo: this.page,
+        pageSize: this.pageSize,
       }
-      getDeployList(param).then((res) => {
-        const { status, result } = res
-        if (status === 200) {
-          console.log(result)
-          this.record = result.records || []
-        }
-      })
+      getDeployList(param)
+        .then((res) => {
+          const { status, result } = res
+          if (status === 200) {
+            if (result.records) {
+              this.record = this.record.concat(result.records)
+              if (result.records.length < this.pageSize) {
+                //判断接口返回数据量小于请求数据量，则表示此为最后一页
+                this.isLoadMore = true
+                this.loadStatus = 'nomore'
+              } else {
+                this.isLoadMore = false
+              }
+            } else {
+              this.isLoadMore = true
+              this.loadStatus = 'nomore'
+            }
+          } else {
+            this.handlePage()
+          }
+        })
+        .catch(() => {
+          this.handlePage()
+        })
     },
   },
 }

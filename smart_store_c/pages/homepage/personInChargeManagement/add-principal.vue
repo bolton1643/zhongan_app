@@ -2,25 +2,26 @@
   <view>
     <view class="page-box">
       <cu-custom bgColor="bg-gray" :isBack="true">
-        <block slot="content">新增负责人</block>
+        <block slot="content">{{isEdit?'编辑负责人':'新增负责人'}}</block>
         <block slot="right">
-          <text style="margin-right: 40upx;">取消</text>
+          <text style="margin-right: 40upx;" @click="goBack">取消</text>
         </block>
       </cu-custom>
 
       <view class="content-box">
         <view class="content-item">
           <text class="item-text">姓名</text>
-          <input class="item-input" v-model="formData.name" maxlength="10" placeholder="请填写姓名" />
+          <input class="item-input" v-model.trim="formData.name" maxlength="10" placeholder="请填写姓名" />
         </view>
         <view class="divide"></view>
         <view class="content-item">
           <text class="item-text">手机号</text>
-          <input class="item-input" v-model="formData.phone" type="number" maxlength="11" placeholder="请输入手机号" />
+          <input class="item-input" v-model.trim="formData.phone" type="number" maxlength="11" placeholder="请输入手机号" />
         </view>
-        <view class="content-item">
+        <view v-if="!isEdit" class="divide"></view>
+        <view v-if="!isEdit" class="content-item">
           <text class="item-text">密码</text>
-          <input class="item-input" v-model="formData.password" type="number" maxlength="11" placeholder="请输入密码" />
+          <input class="item-input" v-model.trim="formData.password" maxlength="16" placeholder="请输入密码" />
         </view>
 
         <view class="content-item" style="margin-top: 40upx;" @click="chooseRole">
@@ -31,13 +32,13 @@
         <view class="divide"></view>
         <view class="content-item">
           <text class="item-text">查看视频</text>
-          <radio-group class="radio-box">
+          <radio-group class="radio-box" @change="radioChange">
             <label class="uni-list-cell uni-list-cell-pd">
-              <radio value="1" :checked="formData.isCheckVideo === '1'" />
+              <radio value="1" :checked="formData.videoFlag === '1'" />
               <text>是</text>
             </label>
             <label class="uni-list-cell uni-list-cell-pd">
-              <radio value="0" :checked="formData.isCheckVideo === '0'" />
+              <radio value="0" :checked="formData.videoFlag === '0'" />
               <text>否</text>
             </label>
           </radio-group>
@@ -45,12 +46,12 @@
         <view class="divide"></view>
         <view class="content-item" @click="chooseImg" style="justify-content: space-between;">
           <text class="item-text">照片</text>
-          <text class="img-path">{{ formData.imgPath }}</text>
-          <image v-show="formData.imgPath" :src="formData.imgPath"></image>
+          <!-- <text class="img-path">{{ formData.imgPath }}</text> -->
+          <image class="avator" v-show="formData.imgPath" :src="formData.imgPath"></image>
           <image class="img-camera" src="../../../static/homepage/icon-xiangji.png"></image>
         </view>
 
-        <view class="makesure-btn" @click="addOperator">确定</view>
+        <view class="makesure-btn" @click="submit">确定</view>
       </view>
     </view>
 
@@ -75,9 +76,7 @@
 </template>
 
 <script>
-import { addOperator } from '../../../api'
-import tui from '../common/httpRequest'
-
+import { addOperator, upadteOperator, uploadImg } from '@/api'
 import uniPopup from '@/components/uni-popup/uni-popup.vue'
 export default {
   components: {
@@ -90,14 +89,15 @@ export default {
         name: '',
         phone: '',
         password: '',
-        role: '',
-        isCheckVideo: '1',
-        imgPath: '',
+        role: 1,
+        videoFlag: '1',
+        imgPath: 'app/fe813e83933b6290000d023ff6a97f93_1601021064153_1601021548288.jpg',
       },
       roleList: [
         { name: '管理员', value: 1 },
         { name: '操作员', value: 2 },
       ],
+      userId: '',
     }
   },
   computed: {
@@ -111,25 +111,127 @@ export default {
           return '请选择'
       }
     },
+    isEdit() {
+      return !!this.userId
+    },
+  },
+  onUnload() {
+    uni.removeStorageSync('operatorData')
   },
 
+  created() {
+    let data = uni.getStorageSync('operatorData')
+    data = data ? JSON.parse(data) : ''
+    if (data) {
+      this.formData.name = data.name || ''
+      this.formData.phone = data.phone || ''
+      this.formData.password = data.password || ''
+      this.formData.role = data.role * 1 || ''
+      this.formData.videoFlag = data.videoFlag || '1'
+      this.formData.imgPath = data.photo
+      this.userId = data.id
+      console.log(data)
+    }
+  },
   methods: {
-    addOperator() {
+    radioChange(evt) {
+      this.formData.videoFlag = evt.target.value
+    },
+    goBack() {
+      history.go(-1)
+      // uni.navigateBack({
+      //       delta: 1,
+      //     })
+    },
+    // 手机号码校验
+    checkPhoneRules() {
+      const regex = /^1[3456789]\d{9}$/
+      let phone = this.formData.phone
+      if (phone && !regex.test(phone)) {
+        return '此电话号码无效'
+      } else if (!phone) {
+        return '请输入手机号'
+      } else {
+        return ''
+      }
+    },
+    // 密码校验
+    checkPasswordRules() {
+      const regex = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
+      let password = this.formData.password
+      if (!password) {
+        return '请输入密码'
+      } else if (password && (password.length < 8 || password.length > 16)) {
+        return '请输入	8-16位字母数字组合'
+      } else if (password && !regex.test(password)) {
+        return '密码格式错误'
+      } else {
+        return ''
+      }
+    },
+    submit() {
+      if (!this.formData.name) {
+        this.$tui.toast('请输入姓名')
+        return
+      }
+      let phoneErr = this.checkPhoneRules()
+      if (phoneErr) {
+        this.$tui.toast(phoneErr)
+        return
+      }
+      let passwordErr = this.isEdit ? false : this.checkPasswordRules()
+      if (passwordErr) {
+        this.$tui.toast(passwordErr)
+        return
+      }
+      if (!this.formData.imgPath) {
+        this.$tui.toast('请上传照片')
+        return
+      }
+      if (this.doubleClick) {
+        return
+      }
+      // this.doubleClick = true
+      let isNeedUpload = !this.formData.imgPath.includes('api/cuser/public/images')
+      if (isNeedUpload) {
+        uploadImg(this.formData.imgPath).then((res) => {
+          let rs = JSON.parse(res)
+          const { status, result, message } = rs
+          if (status === 200) {
+            this.addOperator(result)
+          } else {
+            this.$tui.toast(message)
+            this.doubleClick = false
+          }
+        })
+      } else {
+        let photo = this.formData.imgPath.split('api/cuser/public/images/').pop()
+        this.addOperator(photo)
+      }
+    },
+    addOperator(photo) {
       let param = {
-        shopId: uni.getStorageSync('shopId'),
         name: this.formData.name,
         phone: this.formData.phone,
         role: this.formData.role,
-        password: this.formData.password,
-        videoFlag: this.formData.isCheckVideo,
-        photo: this.formData.imgPath,
+        videoFlag: this.formData.videoFlag * 1,
+        photo: photo,
       }
-      console.log(param)
-      return
-      addOperator(param).then((res) => {
-        const { status, result } = res
+      let request
+      if (this.isEdit) {
+        param.userId = this.userId
+        request = upadteOperator
+      } else {
+        param.password = this.formData.password
+        param.shopId = uni.getStorageSync('shopId')
+        request = addOperator
+      }
+      request(param).then((res) => {
+        const { status, result, message } = res
+        this.doubleClick = false
         if (status === 200) {
-          console.log(result)
+          this.$tui.toast(message)
+          this.goBack()
         }
       })
     },
@@ -153,7 +255,6 @@ export default {
         sizeType: ['original', 'compressed'], //original 原图，compressed 压缩图，默认二者都有
         sourceType: ['album', 'camera'], //album 从相册选图，camera 使用相机，默认二者都有。如需直接开相机或直接选相册，请只使用一个选项
         success: function (res) {
-          console.log(JSON.stringify(res.tempFilePaths))
           _this.formData.imgPath = res.tempFilePaths[0]
         },
         fail: function (res) {
@@ -186,7 +287,16 @@ export default {
       background-color: white;
       padding: 0 40upx;
       box-sizing: border-box;
-
+      position: relative;
+      .avator {
+        height: 100upx;
+        width: 100upx;
+        object-fit: cover;
+        border-radius: 50%;
+        position: absolute;
+        left: 232upx;
+        top: 6upx;
+      }
       .item-text {
         min-width: 192upx;
         font-size: 32upx;

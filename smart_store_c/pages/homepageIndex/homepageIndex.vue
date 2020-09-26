@@ -18,59 +18,31 @@
         </view>
         <view class="top-operate-content">
           <text>{{ shopInfo.shopName }}({{ shopInfo.shopNo }})</text>
-          <image
-            src="../../static/homepage/back.png"
-            v-if="shopList.length > 1"
-          ></image>
+          <image src="../../static/homepage/back.png" v-if="shopList.length > 1"></image>
           <image class="plus" src="../../static/homepage/jiahao.png"></image>
         </view>
       </view>
       <view class="main-content">
         <view class="main-menu-content">
           <view class="main-menu">
-            <view
-              class="menu"
-              v-for="(item, index) in mainMenuList"
-              :key="index"
-              @click="getSubMenu(item)"
-            >
+            <view class="menu" v-for="(item, index) in mainMenuList" :key="index" @click="getSubMenu(item)">
               <image :src="item.image"></image>
               <text v-text="item.text"></text>
             </view>
           </view>
         </view>
-        <view
-          class="main-defence"
-          :class="{ 'main-defence-false': !defenceStatus }"
-        >
+        <view class="main-defence" :class="{ 'main-defence-false': !defenceStatus }">
           <view class="defence-content">
             <image :src="defenceImage"></image>
             <text class="text" v-text="defenceText"></text>
             <text class="time" v-text="defenceTime"></text>
             <!-- <text class="tooltip" v-if="!defenceStatus" v-text="defenceTextTip"></text> -->
-            <button
-              type="primary"
-              class="defence-btn"
-              v-text="defenceBtnText"
-              @click="defence"
-            ></button>
-            <image
-              class="time-select"
-              @click="getDefenceRecord"
-              src="../../static/homepage/timeSelect.png"
-            ></image>
+            <button type="primary" class="defence-btn" v-text="defenceBtnText" @click="defence"></button>
+            <image class="time-select" @click="getDefenceRecord" src="../../static/homepage/timeSelect.png"></image>
           </view>
         </view>
         <title-content title="视频查看" height="418upx" class="video-content">
-          <mosowe-swiper
-            swiperType="videoType"
-            indicator="dots"
-            :touchable="true"
-            :height="270"
-            :lists="videoList"
-            pyramid
-            pyramidMargin="48rpx"
-          ></mosowe-swiper>
+          <mosowe-swiper swiperType="videoType" indicator="dots" :touchable="true" :height="270" :lists="videoList" pyramid pyramidMargin="48rpx"></mosowe-swiper>
         </title-content>
         <title-content title="客流查看" height="516upx" class="person-content">
           <view slot="titleIcon" @click="getFlowDetail">
@@ -78,12 +50,7 @@
             <uni-icons type="arrowright"></uni-icons>
           </view>
           <view class="chart-content">
-            <canvas
-              canvas-id="canvasLine"
-              id="canvasLine"
-              class="charts"
-              @touchstart="touchLineA"
-            ></canvas>
+            <canvas canvas-id="canvasLine" id="canvasLine" class="charts" @touchstart="touchLineA"></canvas>
           </view>
         </title-content>
       </view>
@@ -107,23 +74,23 @@
 </template>
 
 <script>
-import titleContent from "../../components/title-content/title-content.vue";
-import mosoweSwiper from "../../components/mosowe-swiper/mosowe-swiper.vue";
-import uCharts from "../../js_sdk/u-charts/u-charts/u-charts.js";
-import utils from "../../utils/util.js";
-import { getShopInfo, getShopHourly } from "../../api/index";
+import titleContent from '../../components/title-content/title-content.vue'
+import mosoweSwiper from '../../components/mosowe-swiper/mosowe-swiper.vue'
+import uCharts from '../../js_sdk/u-charts/u-charts/u-charts.js'
+import utils from '../../utils/util.js'
+import { getShopInfo, getShopHourly } from '../../api/index'
 
-const shopHome = require("../../static/homepage/shopHome.png");
-const protect = require("../../static/homepage/protect.png");
-const chaperonage = require("../../static/homepage/chaperonage.png");
-const control = require("../../static/homepage/control.png");
-const menu1 = require("../../static/homepage/menu1.png");
-const menu2 = require("../../static/homepage/menu2.png");
-const menu3 = require("../../static/homepage/menu3.png");
-const menu4 = require("../../static/homepage/menu4.png");
-const menu5 = require("../../static/homepage/menu5.png");
-const defenceImage1 = require("../../static/homepage/main-pic.png");
-const defenceImage2 = require("../../static/homepage/main-defence.png");
+const shopHome = require('../../static/homepage/shopHome.png')
+const protect = require('../../static/homepage/protect.png')
+const chaperonage = require('../../static/homepage/chaperonage.png')
+const control = require('../../static/homepage/control.png')
+const menu1 = require('../../static/homepage/menu1.png')
+const menu2 = require('../../static/homepage/menu2.png')
+const menu3 = require('../../static/homepage/menu3.png')
+const menu4 = require('../../static/homepage/menu4.png')
+const menu5 = require('../../static/homepage/menu5.png')
+const defenceImage1 = require('../../static/homepage/main-pic.png')
+const defenceImage2 = require('../../static/homepage/main-defence.png')
 
 export default {
   data() {
@@ -131,73 +98,74 @@ export default {
       menuList: [
         {
           image: shopHome,
-          text: "智慧商家",
+          text: '智慧商家',
         },
         {
           image: protect,
-          text: "随身护卫",
+          text: '随身护卫',
         },
         {
           image: chaperonage,
-          text: "亲情陪护",
+          text: '亲情陪护',
         },
         {
           image: control,
-          text: "智慧消防",
+          text: '智慧消防',
         },
       ],
       mainMenuList: [
         {
           image: menu1,
-          text: "我要赚钱",
-          url: "../../pages/my/money/index",
+          text: '我要赚钱',
+          url: '../../pages/my/money/index',
         },
         {
           image: menu2,
-          text: "我要维修",
+          text: '我要维修',
+          url: '/pages/homepage/to-repair',
         },
         {
           image: menu3,
-          text: "我要理赔",
-          url: "../../pages/homepageIndex/claim/claim",
+          text: '我要理赔',
+          url: '/pages/homepageIndex/claim/claim',
         },
         {
           image: menu4,
-          text: "我的套餐",
-          url: "../../pages/homepageIndex/meal/meal",
+          text: '我的套餐',
+          url: '../../pages/homepageIndex/meal/meal',
         },
         {
           image: menu5,
-          text: "店铺设置",
-          url: "/pages/homepage/personInChargeManagement/person-in-charge-management",
+          text: '店铺设置',
+          url: '/pages/homepage/personInChargeManagement/person-in-charge-management',
         },
       ],
       videoList: [
-        "https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00043-1699.jpg",
-        "https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00043-1699.jpg",
-        "https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00043-1699.jpg",
+        'https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00043-1699.jpg',
+        'https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00043-1699.jpg',
+        'https://ns-strategy.cdn.bcebos.com/ns-strategy/upload/fc_big_pic/part-00043-1699.jpg',
       ],
-      cWidth: "335",
-      cHeight: "210",
+      cWidth: '335',
+      cHeight: '210',
       pixelRatio: 1,
       chartData: {
-        categories: ["2012", "2013", "2014", "2015", "2016", "2017"],
+        categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
         series: [
           {
-            name: "成交量A",
+            name: '成交量A',
             data: [35, 20, 25, 37, 4, 20],
-            color: "#1f99ff",
+            color: '#1f99ff',
           },
         ],
       },
       chartLine: null,
       defenceStatus: false, // 布撤防状态 true 已布防 false已撤防
-      defenceTextTip: "您的套餐还有30天即将到期",
-      defenceTime: "",
+      defenceTextTip: '您的套餐还有30天即将到期',
+      defenceTime: '',
       showModal: false,
       shopInfo: {},
       shopList: [],
-    };
+    }
   },
 
   components: {
@@ -206,60 +174,60 @@ export default {
   },
 
   onLoad() {
-    this.cWidth = uni.upx2px(750);
-    this.cHeight = uni.upx2px(420);
-    this.getServerData();
+    this.cWidth = uni.upx2px(750)
+    this.cHeight = uni.upx2px(420)
+    this.getServerData()
   },
 
   computed: {
     defenceImage() {
-      return this.defenceStatus ? defenceImage2 : defenceImage1;
+      return this.defenceStatus ? defenceImage2 : defenceImage1
     },
 
     defenceText() {
-      return this.defenceStatus ? "已布防" : "已撤防";
+      return this.defenceStatus ? '已布防' : '已撤防'
     },
 
     defenceBtnText() {
-      return this.defenceStatus ? "撤防" : "布防";
+      return this.defenceStatus ? '撤防' : '布防'
     },
   },
 
   created() {
-    this.defenceTime = utils.formatNow();
-    const shopList = uni.getStorageSync("smart_c_shopList");
-    this.shopList = shopList || [];
+    this.defenceTime = utils.formatNow()
+    const shopList = uni.getStorageSync('smart_c_shopList')
+    this.shopList = shopList || []
     if (this.shopList.length) {
-      this.shopInfo = shopList[0];
-      this.defenceStatus = this.shopInfo.armingStatus == "1";
-      this.getShopHourly();
-      this.saveShopLocal();
+      this.shopInfo = shopList[0]
+      this.defenceStatus = this.shopInfo.armingStatus == '1'
+      this.getShopHourly()
+      this.saveShopLocal()
     }
-    this.cWidth = uni.upx2px(750);
-    this.cHeight = uni.upx2px(420);
+    this.cWidth = uni.upx2px(750)
+    this.cHeight = uni.upx2px(420)
   },
 
   methods: {
     saveShopLocal() {
-      uni.setStorageSync("shopId", this.shopInfo.shopId);
+      uni.setStorageSync('shopId', this.shopInfo.shopId)
     },
     // 店铺客流查看
     getShopHourly() {
       getShopHourly(this.shopInfo.shopId).then((res) => {
-        console.log(res);
-      });
+        console.log(res)
+      })
     },
     getServerData() {
-      this.showLineA("canvasLine", this.chartData);
+      this.showLineA('canvasLine', this.chartData)
     },
 
     // line 图
     showLineA(canvasId, chartData) {
-      const _self = this;
+      const _self = this
       this.chartLine = new uCharts({
         $this: _self,
         canvasId: canvasId,
-        type: "area",
+        type: 'area',
         fontSize: 11,
         legend: {
           show: false,
@@ -267,22 +235,22 @@ export default {
         padding: [15, 30, 4, 24],
         dataLabel: false,
         dataPointShape: true,
-        background: "#FFFFFF",
+        background: '#FFFFFF',
         pixelRatio: _self.pixelRatio,
         categories: chartData.categories,
         series: chartData.series,
         animation: true,
         xAxis: {
-          type: "grid",
-          gridColor: "#CCCCCC",
-          gridType: "dash",
+          type: 'grid',
+          gridColor: '#CCCCCC',
+          gridType: 'dash',
           dashLength: 8,
           disableGrid: true,
-          boundaryGap: "justify",
+          boundaryGap: 'justify',
         },
         yAxis: {
-          gridType: "dash",
-          gridColor: "#CCCCCC",
+          gridType: 'dash',
+          gridColor: '#CCCCCC',
           dashLength: 8,
           splitNumber: 5,
         },
@@ -290,78 +258,78 @@ export default {
         height: _self.cHeight * _self.pixelRatio,
         extra: {
           area: {
-            type: "curve",
+            type: 'curve',
             opacity: 0.2,
             addLine: true,
             width: 3,
             gradient: true,
           },
         },
-      });
+      })
     },
 
     // 展示tooltip
     touchLineA(e) {
       this.chartLine.showToolTip(e, {
         format: function (item, category) {
-          return category + " " + item.name + ":" + item.data;
+          return category + ' ' + item.name + ':' + item.data
         },
-      });
+      })
     },
 
     // 布防撤防
     defence() {
-      const { shopId } = this.shopInfo;
+      const { shopId } = this.shopInfo
       const obj = {
         shopId,
         flag: this.defenceStatus ? 0 : 1,
-      };
+      }
       this.$tui
-        .request("/shop/deploy/set", "post", obj)
+        .request('/shop/deploy/set', 'get', obj)
         .then((res) => {
           if (res.success && res.status === 200) {
-            const text = this.defenceStatus ? "撤防成功" : "布防成功";
+            const text = this.defenceStatus ? '撤防成功' : '布防成功'
             uni.showToast({
               title: text,
-            });
-            this.defenceStatus = !this.defenceStatus;
+            })
+            this.defenceStatus = !this.defenceStatus
           }
         })
-        .catch();
+        .catch()
     },
 
     // 跳转到子菜单
     getSubMenu({ url }) {
-      if (!url) return;
+      if (!url) return
       uni.navigateTo({
         url: url,
-      });
+      })
     },
 
     // 立即续费
     getMeal() {
-      this.modalClose();
+      this.modalClose()
       setTimeout(() => {
-        this.getSubMenu({ url: "./meal/meal" });
-      }, 1000);
+        this.getSubMenu({ url: './meal/meal' })
+      }, 1000)
     },
 
     // 模态框关闭
     modalClose() {
-      this.showModal = false;
+      this.showModal = false
     },
 
     // 客流查看详情
     getFlowDetail() {
-      this.getSubMenu({ url: "./flowStatistics/flowStatistics" });
+      this.getSubMenu({ url: './flowStatistics/flowStatistics' })
     },
 
     // 布撤防记录
     getDefenceRecord() {
-      this.getSubMenu({ url: "./defence/defence" });
+      this.getSubMenu({ url: './defence/defence' })
     },
   },
-};
+}
 </script>
 
 <style lang="less">
@@ -382,7 +350,7 @@ export default {
     z-index: 1;
 
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 0;
       left: 0;
@@ -393,7 +361,7 @@ export default {
     }
 
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 0;
       right: 0;
