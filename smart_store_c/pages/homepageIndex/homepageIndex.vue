@@ -17,7 +17,9 @@
           <image src="../../static/homepage/position.png"></image>
         </view>
         <view class="top-operate-content">
-          <text>{{ shopInfo.shopName }}({{ shopInfo.shopNo }})</text>
+          <picker @change="bindPickerChange" :range="shopListPickers">
+            <text>{{ shopInfo.shopName }}({{ shopInfo.shopNo }})</text>
+          </picker>
           <image
             src="../../static/homepage/back.png"
             v-if="shopList.length > 1"
@@ -197,6 +199,7 @@ export default {
       showModal: false,
       shopInfo: {},
       shopList: [],
+      shopListPickers: []
     };
   },
 
@@ -230,6 +233,7 @@ export default {
     const shopList = uni.getStorageSync("smart_c_shopList");
     this.shopList = shopList || [];
     if (this.shopList.length) {
+      this.shopListPickers = this.shopList.map(item => `${item.shopName}(${item.shopNo})`)
       this.shopInfo = shopList[0];
       this.defenceStatus = this.shopInfo.armingStatus == "1";
       this.saveShopLocal();
@@ -241,6 +245,12 @@ export default {
   },
 
   methods: {
+    bindPickerChange(e) {
+      const index = e.detail.value * 1
+      this.shopInfo = this.shopList[index]
+      this.saveShopLocal(this.shopInfo.id)
+      this.getShopInfo()
+    },
     saveShopLocal() {
       uni.setStorageSync("shopId", this.shopInfo.id);
     },

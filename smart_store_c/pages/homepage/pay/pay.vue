@@ -29,7 +29,7 @@
           <view class="payment-method"> 支付方式 </view>
 
           <view class="payment-method-box">
-            <radio-group>
+            <radio-group @change="changeRadio">
               <label class="uni-list-cell uni-list-cell-pd">
                 <view class="payment-method-item">
                   <image
@@ -38,7 +38,7 @@
                   ></image>
                   <text class="payment-text">支付宝支付</text>
                 </view>
-                <radio value="1" :checked="true" />
+                <radio value="ali" :checked="true" />
               </label>
               <label class="uni-list-cell uni-list-cell-pd">
                 <view class="payment-method-item">
@@ -48,7 +48,7 @@
                   ></image>
                   <text class="payment-text">微信支付</text>
                 </view>
-                <radio value="2" />
+                <radio value="wx" />
               </label>
             </radio-group>
           </view>
@@ -66,7 +66,7 @@
 
 <script>
 import uniCountdown from "@/components/uni-countdown/uni-countdown.vue";
-import { aliPrepay, wxPrepay } from '@/api'
+import { aliPrepay, wxPrepay, changeShopRenew } from "@/api";
 export default {
   components: {
     uniCountdown,
@@ -81,84 +81,135 @@ export default {
 
   onLoad: function (options) {
     console.log(options);
+    this.shopId = uni.getStorageSync("shopId");
     this.applyId = options.applyId;
     this.totalMoney = options.totalMoney;
+    // renew 续费
+    this.payType = options.payType;
+    this.period = options.period;
+    this.channel = "ali";
   },
 
   methods: {
+    changeRadio(e) {
+      this.channel = e.detail.value;
+    },
+    changeShopRenew() {
+      if (this.channel === "wx") {
+        uni.showToast({
+          icon: "none",
+          title: "暂不支持微信支付",
+        });
+        return;
+      }
+      changeShopRenew({
+        shopId: this.shopId,
+        period: this.period,
+        channel: this.channel,
+      }).then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          const { tradeNo, outTradeNo } = res.result;
+          uni.requestPayment({
+            provider: "alipay",
+            orderInfo: tradeNo,
+            success: function (res) {
+              console.log("success:" + JSON.stringify(res));
+              uni.navigateTo({
+                url: "/pages/homepage/pay/payResult?payStatus=1",
+              });
+            },
+            fail: function (err) {
+              console.log("fail:" + JSON.stringify(err));
+              const message = err.errMsg || "";
+              if (message.indexOf("[payment支付宝:62001]") !== -1) {
+                uni.showModal({
+                  content: "您已取消支付",
+                  showCancel: false,
+                });
+              } else {
+                uni.showModal({
+                  content: "支付失败,原因为: " + message,
+                  showCancel: false,
+                });
+              }
+            },
+          });
+        }
+      });
+    },
     aliPay() {
       aliPrepay({
-        applyId: '',
-        totalAmount: ''
-      }).then(res => {
-
-      })
+        applyId: "",
+        totalAmount: "",
+      }).then((res) => {});
       uni.requestPayment({
-        provider: 'alipay',
+        provider: "alipay",
         orderInfo: this.prepayDetail.tradeNo,
-        success: res => {
-        console.log(res)
-            // 进入此回调说明支付成功
+        success: (res) => {
+          console.log(res);
+          // 进入此回调说明支付成功
         },
-        fail: err => {
-        console.log('fail:' + JSON.stringify(err));
-            const message = err.errMsg || '';
-            if (message.indexOf('[payment支付宝:62001]') !== -1) {
-                uni.showModal({
-                    content: '您已取消支付。如有需要，您可在我的订单里重新付款。30分钟内有效。',
-                    showCancel: false
-                });
-            } else {
-                uni.showModal({
-                    content: '支付失败,原因为: ' + message,
-                    showCancel: false
-                });
-            }
-        },
-        complete: () => {
-            this.submitting = false;
-            }
-        });
-    },
-    goPay() {
-      uni.showLoading({
-        title: "正在查询支付结果，请稍后",
-      });
-
-      this.$tui
-        .request(
-          "/shop/pay",
-          "post",
-          {
-            applyId: this.applyId,
-          },
-          false,
-          false,
-          true
-        )
-        .then((res) => {
-          if (res.success) {
-            setTimeout(() => {
-              uni.hideLoading();
-              uni.showToast({
-                title: "支付成功!",
-              });
-              uni.setStorageSync("smart_c_shopList", [res.result]);
-              setTimeout(() => {
-                uni.navigateTo({
-                  url: "./payResult?payStatus=1",
-                });
-              }, 1000);
-            }, 3000);
+        fail: (err) => {
+          console.log("fail:" + JSON.stringify(err));
+          const message = err.errMsg || "";
+          if (message.indexOf("[payment支付宝:62001]") !== -1) {
+            uni.showModal({
+              content:
+                "您已取消支付。如有需要，您可在我的订单里重新付款。30分钟内有效。",
+              showCancel: false,
+            });
           } else {
-            uni.showToast({
-              title: data.message,
-              icon: "none",
-              position: "bottom",
+            uni.showModal({
+              content: "支付失败,原因为: " + message,
+              showCancel: false,
             });
           }
-        })
-        .catch();
+        },
+        complete: () => {
+          this.submitting = false;
+        },
+      });
+    },
+    goPay() {
+      if (this.payType === "renew") {
+        // 续费
+        this.changeShopRenew();
+      }
+      // this.$tui
+      //   .request(
+      //     "/shop/pay",
+      //     "post",
+      //     {
+      //       applyId: this.applyId,
+      //     },
+      //     false,
+      //     false,
+      //     true
+      //   )
+      //   .then((res) => {
+      //     if (res.success) {
+      //       setTimeout(() => {
+      //         uni.hideLoading();
+      //         uni.showToast({
+      //           title: "支付成功!",
+      //         });
+      //         uni.setStorageSync("smart_c_shopList", [res.result]);
+      //         setTimeout(() => {
+      //           uni.navigateTo({
+      //             url: "./payResult?payStatus=1",
+      //           });
+      //         }, 1000);
+      //       }, 3000);
+      //     } else {
+      //       uni.showToast({
+      //         title: data.message,
+      //         icon: "none",
+      //         position: "bottom",
+      //       });
+      //     }
+      //   })
+      //   .catch();
     },
   },
 };
@@ -256,7 +307,10 @@ export default {
 
           uni-radio-group {
             width: 100%;
-
+            uni-radio::before,
+            uni-checkbox::before {
+              font-size: 16px;
+            }
             uni-label {
               width: 100%;
               display: flex;

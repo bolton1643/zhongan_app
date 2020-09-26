@@ -24,3 +24,7 @@ export function getPackageInfo(data) {
 export function changeShopCombo(data) {
   return tui.request(`/shop/combo/change`, "GET", data)
 }
+// 套餐续费
+export function changeShopRenew(data) {
+  return tui.request(`/shop/combo/renew`, "GET", data)
+}

@@ -7,19 +7,19 @@
     <view class="content">
       <view class="name">·设备</view>
       <view class="box" v-for="item in devices" :key="item.id">
-        <view>{{ item.name }}</view>
-        <view class="right">¥{{ item.price }}</view>
+        <view>{{ item.name }} * {{ item.amount }}</view>
+        <view class="right">¥{{ item.price * item.amount }}</view>
       </view>
       <view class="name">·服务</view>
       <view class="box" v-for="item in services" :key="item.id">
-        <view>{{ item.name }}</view>
-        <view class="right">¥{{ item.price }}</view>
+        <view>{{ item.name }} * {{ item.amount }}</view>
+        <view class="right">¥{{ item.price * item.amount }}</view>
       </view>
-      <view class="name">·保险</view>
-      <view class="box" v-for="item in services" :key="item.id">
-        <view>{{ item.name }}</view>
-        <view class="right">¥{{ item.price }}</view>
-      </view>
+      <!-- <view class="name">·保险</view>
+      <view class="box">
+        <view>保费</view>
+        <view class="right">¥{{ insurance.insuranceAmount }}</view>
+      </view> -->
       <view class="time">
         <view class="time-itle">续费时长（年）</view>
         <view class="right">
@@ -43,6 +43,16 @@ export default {
       year: 1,
       devices: [],
       services: [],
+      totalMoney: "",
+      insurance: {
+        beginDate: "",
+        insuranceAmount: "",
+        endDate: "",
+        insuranerName: "",
+        benifitName: "",
+        insuraneeName: "",
+        insuranceFile: "",
+      },
     };
   },
   computed: {
@@ -58,22 +68,23 @@ export default {
     getPackageInfo() {
       getPackageInfo({ shopId: this.shopId }).then((res) => {
         if (res.status === 200) {
-          const { devices, services, totalMoney } = res.result;
+          const { devices, services, totalMoney, insurance } = res.result;
           this.devices = devices;
           this.services = services;
           this.totalMoney = totalMoney || "";
+          this.insurance = insurance;
         }
       });
     },
     handleMinus() {
-      this.year = Math.max(0, this.year - 1);
+      this.year = Math.max(1, this.year - 1);
     },
     handleAdd() {
       this.year += 1;
     },
     handleSubmit() {
-      uni.navigateTo({
-        url: `/pages/homepage/pay/pay?totalMoney=${this.price}`,
+      uni.redirectTo({
+        url: `/pages/homepage/pay/pay?totalMoney=${this.price}&payType=renew&period=${this.year}`,
       });
     },
   },
