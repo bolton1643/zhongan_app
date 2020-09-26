@@ -194,7 +194,7 @@ export default {
       defenceTextTip: "您的套餐还有30天即将到期",
       defenceTime: "",
       lastDay: "", // 套餐剩余过期天数
-      showModal: true,
+      showModal: false,
       shopInfo: {},
       shopList: [],
     };
@@ -253,8 +253,8 @@ export default {
     // 获取店铺信息，计算过期时间
     getShopInfo() {
       getShopInfo(this.shopInfo.id).then((res) => {
-        const now = new Date();
-        const endTime = new Date();
+        const now = new Date().getTime();
+        const endTime = res.result.serviceExpireDate;
         const day = Math.floor((endTime - now) / 1000 / 60 / 60 / 24);
         if (day <= 7) {
           this.showModal = true;

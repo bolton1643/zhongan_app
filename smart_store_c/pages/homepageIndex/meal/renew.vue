@@ -5,18 +5,23 @@
     </cu-custom>
     <view class="title">套餐内容</view>
     <view class="content">
+      <view class="name">·设备</view>
+      <view class="box" v-for="item in devices" :key="item.id">
+        <view>{{ item.name }}</view>
+        <view class="right">¥{{ item.price }}</view>
+      </view>
+      <view class="name">·服务</view>
+      <view class="box" v-for="item in services" :key="item.id">
+        <view>{{ item.name }}</view>
+        <view class="right">¥{{ item.price }}</view>
+      </view>
       <view class="name">·保险</view>
-      <view class="box">
-        <view class="left">含</view>
-        <view class="center">
-          <view>10万保额保险 一年</view>
-          <view>出警服务 一年</view>
-          <view>设备维修服务 一年</view>
-        </view>
-        <view class="right">¥439</view>
+      <view class="box" v-for="item in services" :key="item.id">
+        <view>{{ item.name }}</view>
+        <view class="right">¥{{ item.price }}</view>
       </view>
       <view class="time">
-        <view class="title">续费时长（年）</view>
+        <view class="time-itle">续费时长（年）</view>
         <view class="right">
           <view class="minus" @click="handleMinus">-</view>
           <input type="number" v-model="year" class="ipt" />
@@ -30,14 +35,36 @@
 </template>
 
 <script>
+import { getPackageInfo } from "@/api";
+
 export default {
   data() {
     return {
       year: 1,
-      price: "123",
+      devices: [],
+      services: [],
     };
   },
+  computed: {
+    price() {
+      return this.totalMoney ? this.totalMoney * this.year : "";
+    },
+  },
+  mounted() {
+    this.shopId = uni.getStorageSync("shopId");
+    this.getPackageInfo();
+  },
   methods: {
+    getPackageInfo() {
+      getPackageInfo({ shopId: this.shopId }).then((res) => {
+        if (res.status === 200) {
+          const { devices, services, totalMoney } = res.result;
+          this.devices = devices;
+          this.services = services;
+          this.totalMoney = totalMoney || "";
+        }
+      });
+    },
     handleMinus() {
       this.year = Math.max(0, this.year - 1);
     },
@@ -74,10 +101,10 @@ export default {
   }
   .box {
     display: flex;
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
     font-size: 26rpx;
-    padding-top: 20rpx;
-    padding-bottom: 30rpx;
+    padding: 20rpx 60rpx 30rpx 30rpx;
     color: rgba(52, 52, 52, 1);
     border-bottom: 1rpx solid rgba(238, 238, 238, 1);
     .left {
@@ -85,18 +112,15 @@ export default {
     }
     .center {
     }
-    .right {
-      position: absolute;
-      top: 83rpx;
-      right: 63rpx;
-    }
   }
   .time {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1rpx solid rgba(238, 238, 238, 1);
-    .title {
+    padding-right: 60rpx;
+    height: 90rpx;
+    .time-title {
       font-size: 26rpx;
       font-weight: 500;
       color: #343434;

@@ -1,36 +1,45 @@
 <template>
   <view class="page-box">
-    <cu-custom bgColor="bg-gray" :isBack="true">
+    <cu-custom bgColor="bg-white" :isBack="true">
       <block slot="content">我的套餐</block>
     </cu-custom>
     <view class="content">
       <view class="content-info mb16">
         <view class="content-info-item mb16">
           <text class="text">开始时间</text>
-          <text class="data">2020-5-3</text>
+          <text class="data">{{ serviceEffectiveDate }}</text>
         </view>
         <view class="content-info-item mb16">
           <text class="text">结束时间</text>
-          <text class="data">2021-5-2</text>
+          <text class="data">{{ serviceExpireDate }}</text>
         </view>
         <view class="content-info-item mb16">
           <text class="text">套餐价格</text>
-          <text class="data">￥1199</text>
+          <text class="data">￥{{ totalMoney }}</text>
         </view>
         <view class="content-info-item mb8">
           <text class="text">设备</text>
-          <text class="data">￥439</text>
         </view>
-        <view class="content-info-item-sub mb16"
-          >华为好望AI摄像头(含安装费) *1</view
+        <view
+          class="content-info-item-sub space mb8"
+          v-for="item in devices"
+          :key="item.id"
         >
+          <text class="text">{{ item.name }} * {{ item.amount }}</text>
+          <text class="data">￥{{ item.price }}</text>
+        </view>
+
         <view class="content-info-item mb8">
           <text class="text">服务费</text>
-          <text class="data">￥450</text>
         </view>
-        <view class="content-info-item-sub space mb8">10万保额保险一年</view>
-        <view class="content-info-item-sub space mb8">出警服务一年</view>
-        <view class="content-info-item-sub space">设备维修服务一年</view>
+        <view
+          class="content-info-item-sub space mb8"
+          v-for="item in services"
+          :key="item.id"
+        >
+          <text class="text">{{ item.name }}</text>
+          <text class="data">￥{{ item.price }}</text></view
+        >
       </view>
       <view class="content-info">
         <view class="content-info-item mb8">
@@ -38,34 +47,44 @@
         </view>
         <view class="content-info-item-sub space mb8">
           <text class="text">保障开始时间</text>
-          <text class="data">2020-5-4 00:00:00</text>
+          <text class="data">{{ insurance.beginDate }}</text>
         </view>
         <view class="content-info-item-sub space mb8">
           <text class="text">保障结束时间</text>
-          <text class="data">2020-5-3 00:00:00</text>
+          <text class="data">{{ insurance.endDate }}</text>
         </view>
         <view class="content-info-item-sub space mb8">
           <text class="text">投保人</text>
-          <text class="data">王小二</text>
+          <text class="data">{{ insurance.insuranerName }}</text>
         </view>
         <view class="content-info-item-sub space mb8">
           <text class="text">被保人</text>
-          <text class="data">王小二</text>
+          <text class="data">{{ insurance.insuraneeName }}</text>
         </view>
         <view class="content-info-item-sub space mb8">
           <text class="text">受益人</text>
-          <text class="data">王小二</text>
+          <text class="data">{{ insurance.benifitName }}</text>
         </view>
         <view class="content-info-item-sub space mb8">
           <text class="text">保额</text>
-          <text class="data">￥10,000</text>
+          <text class="data">￥{{ insurance.insuranceAmount }}</text>
         </view>
       </view>
       <view class="content-message mb16">
         <text class="text">电子保单</text>
-        <uni-icons type="arrowright"></uni-icons>
+        <view @click="downloadFile">
+          <text>下载电子保单</text>
+          <uni-icons type="arrowright"></uni-icons>
+        </view>
       </view>
-      <template v-if="show">
+      <view class="download-info">
+        <image src="../../../static/homepage/meal/danger.png"></image>
+        <text class="text"
+          >本页面仅供参考，实际保单信息以保险公司官方内容为准</text
+        >
+      </view>
+      <button type="primary" class="primary" @click="getText">我要发起</button>
+      <!-- <template v-if="show">
         <view class="content-message bold">
           <text class="text">增加设备或提高保额</text>
           <view class="info">
@@ -93,17 +112,11 @@
           <view class="download">
             <text>下载电子保单</text>
           </view>
-          <view class="download-info">
-            <image src="../../../static/homepage/meal/danger.png"></image>
-            <text class="text"
-              >本页面仅供参考，实际保单信息以保险公司官方内容为准</text
-            >
-          </view>
           <button type="primary" class="primary" @click="getText">
             我要发起
           </button>
         </view>
-      </template>
+      </template> -->
     </view>
     <view
       class="cu-modal show meal-modal"
@@ -111,12 +124,41 @@
       @click="showModal = false"
     >
       <view class="cu-dialog">
-        <view class="modal-item">
+        <view class="modal-item" @click="showChangeModal = true">
           <view class="title">变更套餐或保额</view>
         </view>
         <view class="modal-item" @click="renew">
           <view class="title">直接续费</view>
           <view class="text">（次年套餐不变，直接续费）</view>
+        </view>
+      </view>
+    </view>
+    <view
+      class="cu-modal show change-modal"
+      v-if="showChangeModal"
+      @click="showChangeModal = false"
+    >
+      <view class="cu-dialog">
+        <view class="title">你确定要发起变更套餐吗？</view>
+        <view class="modal-btns">
+          <view class="cancel-btn" @click="showChangeModal = false">取消</view>
+          <view class="confirm-btn" @click="handleChange">确定</view>
+        </view>
+      </view>
+    </view>
+    <view
+      class="cu-modal show change-modal changeEnd"
+      v-if="showChangeEndModal"
+      @click="showChangeEndModal = false"
+    >
+      <view class="cu-dialog">
+        <view class="title">
+          您的申请已提交，我们会有工作人员在2个工作日内联系您，请耐心等待！</view
+        >
+        <view class="modal-btns">
+          <view class="confirm-btn" @click="showChangeEndModal = false"
+            >确定</view
+          >
         </view>
       </view>
     </view>
@@ -138,14 +180,30 @@
 </template>
 
 <script>
-import { getPackageInfo } from "../../../api";
+import { getPackageInfo, changeShopCombo } from "@/api";
 export default {
   data() {
     return {
       mealInfo: {},
       show: false,
-      showModal: false,
-      showPayModal: false,
+      showModal: false, // 发起一个变更或续费操作
+      showPayModal: false, // 未支付
+      showChangeModal: false, // 套餐biang
+      showChangeEndModal: false,
+      serviceExpireDate: "", // 服务过期时间
+      serviceEffectiveDate: "", // 服务生效时间
+      devices: [], // 设备
+      services: [], // 服务
+      totalMoney: "", // 套餐价格
+      insurance: {
+        beginDate: "",
+        insuranceAmount: "",
+        endDate: "",
+        insuranerName: "",
+        benifitName: "",
+        insuraneeName: "",
+        insuranceFile: "",
+      },
     };
   },
   mounted() {
@@ -153,6 +211,47 @@ export default {
     this.getPackageInfo();
   },
   methods: {
+    downloadFile() {
+      const path = this.insurance.insuranceFile;
+      uni.showLoading({
+        title: "正在下载...",
+      });
+      uni.downloadFile({
+        url: "https://files1.xuetucn.com/xuetu2/assets/pdf/xuetu.pdf", //仅为示例，并非真实的资源
+        success: ({ tempFilePath, statusCode }) => {
+          if (statusCode === 200) {
+            uni.saveFile({
+              tempFilePath,
+              success: (res) => {
+                //res.savedFilePath文件的保存路径
+                //保存成功并打开文件
+                uni.openDocument({
+                  filePath: res.savedFilePath,
+                  success: () => {
+                    uni.hideLoading();
+                  },
+                });
+              },
+              fail: (e) => {
+                uni.hideLoading();
+                uni.showToast("下载失败", JSON.stringify(e));
+              },
+            });
+          }
+        },
+        fail: (e) => {
+          uni.hideLoading();
+          uni.showToast("下载失败", JSON.stringify(e));
+        },
+      });
+    },
+    handleChange() {
+      changeShopCombo({
+        shopId: this.shopId,
+      }).then((res) => {
+        this.showChangeEndModal = true;
+      });
+    },
     renew() {
       uni.navigateTo({
         url: "/pages/homepageIndex/meal/renew",
@@ -161,6 +260,24 @@ export default {
     getPackageInfo() {
       getPackageInfo({ shopId: this.shopId }).then((res) => {
         console.log(res);
+        if (res.status === 200) {
+          const {
+            serviceEffectiveDate,
+            serviceExpireDate,
+            devices,
+            services,
+            totalMoney,
+            insurance,
+          } = res.result;
+          this.serviceEffectiveDate = serviceEffectiveDate;
+          this.serviceExpireDate = serviceExpireDate;
+          this.devices = devices;
+          this.services = services;
+          this.totalMoney = totalMoney || "";
+          this.insurance = {
+            ...insurance,
+          };
+        }
       });
     },
     // 取消发起
@@ -310,37 +427,35 @@ page {
             text-decoration: underline;
           }
         }
-
-        .download-info {
-          height: 28rpx;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 54rpx;
-
-          image {
-            width: 24rpx;
-            height: 24rpx;
-            margin-right: 16rpx;
-          }
-
-          .text {
-            font-size: 24rpx;
-            color: #999999;
-          }
-        }
-
-        .primary {
-          height: 112rpx;
-          border-radius: 56rpx;
-          font-size: 36rpx;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
       }
     }
+  }
+  .download-info {
+    height: 28rpx;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 54rpx;
+
+    image {
+      width: 24rpx;
+      height: 24rpx;
+      margin-right: 16rpx;
+    }
+
+    .text {
+      font-size: 24rpx;
+      color: #999999;
+    }
+  }
+  .primary {
+    height: 112rpx;
+    border-radius: 56rpx;
+    font-size: 36rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -407,7 +522,7 @@ page {
     border-radius: 20rpx;
     .modal-item {
       height: 98rpx;
-      border: 1rpx solid #1576f4;
+      border: 1px solid #1576f4;
       border-radius: 10rpx;
       display: flex;
       flex-direction: column;
@@ -426,6 +541,51 @@ page {
     .text {
       font-size: 22rpx;
       color: #aaaaaa;
+    }
+  }
+}
+.change-modal {
+  &.changeEnd {
+    .cu-dialog {
+      height: 380rpx;
+    }
+    .modal-btns {
+      justify-content: center;
+    }
+  }
+  .cu-dialog {
+    width: 630rpx;
+    height: 324rpx;
+    background: #ffffff;
+    border-radius: 20rpx;
+    padding: 100rpx 100rpx 80rpx;
+  }
+  .title {
+    font-size: 26rpx;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 60rpx;
+  }
+  .modal-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .cancel-btn,
+    .confirm-btn {
+      width: 200rpx;
+      height: 61rpx;
+      border-radius: 30rpx;
+      text-align: center;
+      line-height: 61rpx;
+      font-size: 26rpx;
+    }
+    .cancel-btn {
+      border: 1px solid #aaaaaa;
+      color: #333333;
+    }
+    .confirm-btn {
+      background: #1676f4;
+      color: #fff;
     }
   }
 }
