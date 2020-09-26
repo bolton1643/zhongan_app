@@ -755,14 +755,18 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&status=**(状态
 	result: {
 		records:[{
 			{
+			  id: 标识
 				shopId:--店铺标识
 				shopName:--店铺名称
 				shopNo--店铺编号
 				stolenDate--被盗日期
 				claimAmount--申报金额
 				photo--图片
-				status--状态
+				status--状态  1待审核、2审核通过，3：已支付 4审核未通过
 				payAmount--理赔金额
+				claimBy--申报人
+				notes--审核意见
+				createTime--申报时间
 			}
 		},...],
 		total:26,                --总记录数
@@ -798,6 +802,27 @@ method: post
 	}
 }
 ```
+
+
+
+#### 理赔修改
+
+```
+url: /shop/claim/modify
+method: post  
+请求参数：可修改图片和申报理赔金额
+{
+	id: 标识
+	photo: 图片
+	claimAmount: 理赔金额
+}
+--
+{
+	status: 200
+}
+```
+
+
 
 
 
