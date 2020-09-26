@@ -44,7 +44,7 @@
 
 			.content {
 				width: 100%;
-				margin-top: 40upx;
+				// margin-top: 40upx;
 				
 				.content-info {
 					padding: 0 40upx;

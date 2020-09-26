@@ -31,7 +31,8 @@
             </view>
           </view>
         </view>
-        <view class="main-defence" :class="{ 'main-defence-false': !defenceStatus }">
+        <!-- :class="{ 'main-defence-false': !defenceStatus }" -->
+        <view class="main-defence">
           <view class="defence-content">
             <image :src="defenceImage"></image>
             <text class="text" v-text="defenceText"></text>
@@ -160,9 +161,9 @@ export default {
       },
       chartLine: null,
       defenceStatus: false, // 布撤防状态 true 已布防 false已撤防
-      defenceTextTip: "您的套餐还有30天即将到期",
-      defenceTime: "",
-      lastDay: "", // 套餐剩余过期天数
+      defenceTextTip: '您的套餐还有30天即将到期',
+      defenceTime: '',
+      lastDay: '', // 套餐剩余过期天数
       showModal: false,
       shopInfo: {},
       shopList: [],
@@ -199,11 +200,10 @@ export default {
     const shopList = uni.getStorageSync('smart_c_shopList')
     this.shopList = shopList || []
     if (this.shopList.length) {
-      this.shopInfo = shopList[0];
-      this.defenceStatus = this.shopInfo.armingStatus == "1";
-      this.saveShopLocal();
-      this.getShopHourly();
-      this.getShopInfo();
+      this.shopInfo = shopList[0]
+      this.saveShopLocal()
+      this.getShopHourly()
+      this.getShopInfo()
     }
     this.cWidth = uni.upx2px(750)
     this.cHeight = uni.upx2px(420)
@@ -211,25 +211,26 @@ export default {
 
   methods: {
     saveShopLocal() {
-      uni.setStorageSync("shopId", this.shopInfo.id);
+      uni.setStorageSync('shopId', this.shopInfo.id)
     },
     // 店铺客流查看
     getShopHourly() {
       getShopHourly(this.shopInfo.id).then((res) => {
-        console.log(res);
-      });
+        console.log(res)
+      })
     },
     // 获取店铺信息，计算过期时间
     getShopInfo() {
       getShopInfo(this.shopInfo.id).then((res) => {
-        const now = new Date().getTime();
-        const endTime = res.result.serviceExpireDate;
-        const day = Math.floor((endTime - now) / 1000 / 60 / 60 / 24);
+        const now = new Date().getTime()
+        const endTime = res.result.serviceExpireDate
+        const day = Math.floor((endTime - now) / 1000 / 60 / 60 / 24)
         if (day <= 7) {
-          this.showModal = true;
-          this.lastDay = day;
+          this.showModal = true
+          this.lastDay = day
         }
-      });
+        this.defenceStatus = res.result.armingStatus == '1'
+      })
     },
     getServerData() {
       this.showLineA('canvasLine', this.chartData)
@@ -293,9 +294,9 @@ export default {
 
     // 布防撤防
     defence() {
-      const { shopId } = this.shopInfo
+      const { id } = this.shopInfo
       const obj = {
-        shopId,
+        shopId: id,
         flag: this.defenceStatus ? 0 : 1,
       }
       this.$tui
@@ -322,8 +323,8 @@ export default {
 
     // 立即续费
     getMeal() {
-      this.modalClose();
-      this.getSubMenu({ url: "./meal/meal" });
+      this.modalClose()
+      this.getSubMenu({ url: './meal/meal' })
     },
 
     // 模态框关闭
@@ -454,7 +455,7 @@ export default {
       display: flex;
       padding: 0 0 0 40upx;
       align-items: center;
-      justify-content: ;
+      // justify-content: ;
       color: #ffffff;
 
       text {
@@ -523,9 +524,9 @@ export default {
       box-sizing: border-box;
       margin-top: 8upx;
 
-      &.main-defence-false {
-        height: 532upx;
-      }
+      // &.main-defence-false {
+      //   height: 532upx;
+      // }
 
       .defence-content {
         padding: 32upx 32upx 40upx;

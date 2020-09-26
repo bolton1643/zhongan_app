@@ -10,7 +10,7 @@
     <view class="content-box">
       <uni-swipe-action>
         <uni-swipe-action-item v-for="(item, index) in swipeList" :key="item.id" @change="swipeChange($event, index)">
-          <view class="content-item">
+          <view class="content-item" @click="toDetail(item)">
             <view class="content-box">
               <!-- ../../../static/homepage/icon-default-avatar.png -->
               <image class="content-avatar" :src="item.photo"></image>
@@ -20,7 +20,7 @@
               </view>
             </view>
             <view class="role" :class="{'operator':item.role!=1}">{{item.role==1?'管理员':'操作员'}}</view>
-            <view class="icon-enter" @click="toDetail(item)">
+            <view class="icon-enter">
               <image v-show="item.showIconEnter" src="../../../static/homepage/icon-enter.png"></image>
             </view>
           </view>
@@ -44,8 +44,11 @@ export default {
       swipeList: [],
     }
   },
-  created() {
+  onShow() {
     this.getOperatorList()
+  },
+  onBackPress(e) {
+    console.log(e)
   },
   methods: {
     getOperatorList() {

@@ -100,7 +100,7 @@ page {
     }
     .content {
       width: 100%;
-      margin-top: 40upx;
+      // margin-top: 40upx;
 
       .content-info {
         width: 100%;

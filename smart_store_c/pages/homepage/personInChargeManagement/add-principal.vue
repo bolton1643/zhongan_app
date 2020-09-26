@@ -130,7 +130,6 @@ export default {
       this.formData.videoFlag = data.videoFlag || '1'
       this.formData.imgPath = data.photo
       this.userId = data.id
-      console.log(data)
     }
   },
   methods: {
@@ -138,10 +137,10 @@ export default {
       this.formData.videoFlag = evt.target.value
     },
     goBack() {
-      history.go(-1)
-      // uni.navigateBack({
-      //       delta: 1,
-      //     })
+      // history.go(-1)
+      uni.navigateBack({
+            delta: 1,
+          })
     },
     // 手机号码校验
     checkPhoneRules() {
@@ -255,6 +254,7 @@ export default {
         sizeType: ['original', 'compressed'], //original 原图，compressed 压缩图，默认二者都有
         sourceType: ['album', 'camera'], //album 从相册选图，camera 使用相机，默认二者都有。如需直接开相机或直接选相册，请只使用一个选项
         success: function (res) {
+          console.log(res);
           _this.formData.imgPath = res.tempFilePaths[0]
         },
         fail: function (res) {
