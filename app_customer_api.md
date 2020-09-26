@@ -459,10 +459,15 @@ params: shopId=*** 店铺标识
       serviceMoney: --服务价格
 	    serviceEffectiveDate--服务生效时间yyyy-mm-dd
     	serviceDuration--服务年限
-    	insuranceEffectiveDate--保险生效时间
-    	insuranceDuration--保险年限
-    	benifitName--受益人
-    	shopOwner--投保人
+    	insurance: {
+    		endDate--保险失效时间
+				beginDate--保险生效时间
+	    	benifitName--受益人
+    		insuranerName--投保人
+    		insuraneeName--被保人
+    		insuranceAmount--保额
+    		insuranceFile--保单
+    	}
       devices: [{
       			id: 标识
             deviceType: 1 --设备，2烟感 3 门磁
@@ -478,7 +483,7 @@ params: shopId=*** 店铺标识
             insurance: 0|1 1为保险
        }],
        extraDevices:[]  --参照devices，数量可以多个
-       extracServices: [] --参照services，数量可以多份
+       extracServices: [] --参照services，数量可以多份,
        optionCombo: {
             "devices": [
                 {
@@ -624,6 +629,8 @@ params: shopId=**  门店标识
 --返回报文
 {
 	result:[ {
+	  id: --标识
+	  deviceType: ** --1 摄像头、2烟感  3门磁
 		deviceName: *** --设备名称
 		status: *** --状态 离线|在线
 	},...]
