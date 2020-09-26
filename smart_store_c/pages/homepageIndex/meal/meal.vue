@@ -214,7 +214,7 @@ export default {
   },
   methods: {
     downloadFile() {
-      const path = this.insurance.insuranceFile;
+      const path = this.$tui.handleImageUrl(this.insurance.insuranceFile);
       uni.showLoading({
         title: "正在下载...",
       });

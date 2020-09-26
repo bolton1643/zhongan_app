@@ -24,7 +24,7 @@
             src="../../static/homepage/back.png"
             v-if="shopList.length > 1"
           ></image>
-          <image class="plus" src="../../static/homepage/jiahao.png"></image>
+          <image class="plus" @click="addNewShop" src="../../static/homepage/jiahao.png"></image>
         </view>
       </view>
       <view class="main-content">
@@ -217,6 +217,11 @@ export default {
   },
 
   methods: {
+    addNewShop() {
+      uni.navigateTo({
+        url: '/pages/homepage/newUserSpecialApplication'
+      })
+    },
     bindPickerChange(e) {
       const index = e.detail.value * 1
       this.shopInfo = this.shopList[index]
@@ -306,7 +311,7 @@ export default {
 
     // 布防撤防
     defence() {
-      const { shopId } = this.shopInfo
+      const { id } = this.shopInfo
       const obj = {
         shopId,
         flag: this.defenceStatus ? 0 : 1,
