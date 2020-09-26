@@ -914,14 +914,6 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&repairStatus=**(
 
 
 
-#### 套餐续费
-
-```
-
-```
-
-
-
 #### 套餐变更
 
 ```
@@ -931,6 +923,26 @@ params: shopId=** 门店信息
 --返回报文
 {
 	status
+}
+```
+
+
+
+#### 套餐续费
+
+```
+url: /shop/combo/renew
+method: get
+params: shopId=**&period=**&channel=** 门店信息|时长（年,不填默认一年)|支付渠道必填(ali|wx)
+--返回报文
+{
+  
+	status:200
+	result: {
+		outTradeNo: 订单号
+	  tradeNo: 订单套
+	  totalMoney:**
+	}
 }
 ```
 
