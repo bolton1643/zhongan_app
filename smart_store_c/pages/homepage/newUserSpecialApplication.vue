@@ -95,6 +95,9 @@
 				success: (res) => {
 					console.log(res);
 					this.formData.phone = res.data.phone;
+          this.formData.name = res.data.name || '';
+          this.formData.province_city_county = res.data.provinceCityCounty || ''
+          this.formData.addr = res.data.addr || ''
 				}
 			});
 		},

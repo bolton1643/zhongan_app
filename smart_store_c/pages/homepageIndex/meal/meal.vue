@@ -83,7 +83,9 @@
           >本页面仅供参考，实际保单信息以保险公司官方内容为准</text
         >
       </view>
-      <button type="primary" class="primary" @click="getText">我要发起</button>
+      <button type="primary" class="primary" @click="showModal = true">
+        我要发起
+      </button>
       <!-- <template v-if="show">
         <view class="content-message bold">
           <text class="text">增加设备或提高保额</text>
@@ -212,7 +214,7 @@ export default {
   },
   methods: {
     downloadFile() {
-      const path = this.insurance.insuranceFile;
+      const path = this.$tui.handleImageUrl(this.insurance.insuranceFile);
       uni.showLoading({
         title: "正在下载...",
       });
@@ -259,7 +261,6 @@ export default {
     },
     getPackageInfo() {
       getPackageInfo({ shopId: this.shopId }).then((res) => {
-        console.log(res);
         if (res.status === 200) {
           const {
             serviceEffectiveDate,
@@ -279,31 +280,6 @@ export default {
           };
         }
       });
-    },
-    // 取消发起
-    cancel() {
-      this.showModal = false;
-    },
-
-    // 确定发起
-    submit() {
-      this.cancel();
-      uni.showLoading({
-        title: "正在提交",
-      });
-      setTimeout(() => {
-        uni.showToast({
-          title: "提交成功",
-        });
-      }, 3000);
-    },
-
-    getText() {
-      this.showModal = true;
-    },
-
-    handle() {
-      uni.navigateTo({});
     },
 
     submitPay() {

@@ -17,9 +17,14 @@
           <image src="../../static/homepage/position.png"></image>
         </view>
         <view class="top-operate-content">
-          <text>{{ shopInfo.shopName }}({{ shopInfo.shopNo }})</text>
-          <image src="../../static/homepage/back.png" v-if="shopList.length > 1"></image>
-          <image class="plus" src="../../static/homepage/jiahao.png"></image>
+          <picker @change="bindPickerChange" :range="shopListPickers">
+            <text>{{ shopInfo.shopName }}({{ shopInfo.shopNo }})</text>
+          </picker>
+          <image
+            src="../../static/homepage/back.png"
+            v-if="shopList.length > 1"
+          ></image>
+          <image class="plus" @click="addNewShop" src="../../static/homepage/jiahao.png"></image>
         </view>
       </view>
       <view class="main-content">
@@ -167,7 +172,8 @@ export default {
       showModal: false,
       shopInfo: {},
       shopList: [],
-    }
+      shopListPickers: []
+    };
   },
 
   components: {
@@ -200,16 +206,29 @@ export default {
     const shopList = uni.getStorageSync('smart_c_shopList')
     this.shopList = shopList || []
     if (this.shopList.length) {
-      this.shopInfo = shopList[0]
-      this.saveShopLocal()
-      this.getShopHourly()
-      this.getShopInfo()
+      this.shopListPickers = this.shopList.map(item => `${item.shopName}(${item.shopNo})`)
+      this.shopInfo = shopList[0];
+      this.defenceStatus = this.shopInfo.armingStatus == "1";
+      this.saveShopLocal();
+      this.getShopHourly();
+      this.getShopInfo();
     }
     this.cWidth = uni.upx2px(750)
     this.cHeight = uni.upx2px(420)
   },
 
   methods: {
+    addNewShop() {
+      uni.navigateTo({
+        url: '/pages/homepage/newUserSpecialApplication'
+      })
+    },
+    bindPickerChange(e) {
+      const index = e.detail.value * 1
+      this.shopInfo = this.shopList[index]
+      this.saveShopLocal(this.shopInfo.id)
+      this.getShopInfo()
+    },
     saveShopLocal() {
       uni.setStorageSync('shopId', this.shopInfo.id)
     },
