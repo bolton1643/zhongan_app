@@ -779,7 +779,7 @@ params: pageNo=**&pageSize**&shopName=**(店铺名称或编码)&status=**(状态
 
 
 
-#### 理赔明细
+#### 理赔明细（ok)
 
 ```
 url: /shop/claim/detail/{claimId}
