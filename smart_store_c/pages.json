@@ -201,6 +201,10 @@
 			"path": "pages/homepageIndex/meal/meal",
 			"style": {}
 		},
+    {
+			"path": "pages/homepageIndex/meal/renew",
+			"style": {}
+		},
 		{
 			"path": "pages/homepageIndex/defence/defence",
 			"style": {}
